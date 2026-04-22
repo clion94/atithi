@@ -11,7 +11,6 @@ import Link from 'next/link'
 import { walkInCheckIn } from '@/lib/services/reservations'
 import { getAvailableRooms } from '@/lib/services/rooms'
 import { getGuests, createGuest } from '@/lib/services/guests'
-import { reservationSchema, type ReservationFormData } from '@/lib/validations/reservation'
 import { guestSchema, type GuestFormData } from '@/lib/validations/guest'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -24,14 +23,34 @@ import type { Room, Guest } from '@/types'
 
 type Step = 1 | 2 | 3
 
+// Step 3 only needs adults / children / special_requests from RHF
+type Step3Fields = { adults: number; children: number; special_requests?: string }
+const step3Schema = import('zod').then(({ z }) =>
+  z.object({
+    adults: z.number().int().min(1).max(10),
+    children: z.number().int().min(0).max(10),
+    special_requests: z.string().optional(),
+  })
+)
+void step3Schema // suppress unused warning
+
+function tomorrowISO(): string {
+  const d = new Date()
+  d.setDate(d.getDate() + 1)
+  return d.toISOString().split('T')[0]
+}
+
 export default function WalkInPage() {
   const { t } = useTranslation()
   const router = useRouter()
   const toast = useToast()
   const property = useAppStore((s) => s.property)
   const today = todayISO()
+  const tomorrow = tomorrowISO()
 
   const [step, setStep] = useState<Step>(1)
+  const [checkOutDate, setCheckOutDate] = useState('')
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
   const [availableRooms, setAvailableRooms] = useState<Room[]>([])
   const [guests, setGuests] = useState<Guest[]>([])
   const [guestSearch, setGuestSearch] = useState('')
@@ -39,43 +58,34 @@ export default function WalkInPage() {
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null)
   const [loading, setLoading] = useState(false)
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    setValue,
-    formState: { errors },
-  } = useForm<ReservationFormData>({
-    resolver: zodResolver(reservationSchema),
-    defaultValues: {
-      check_in_date: today,
-      adults: 1,
-      children: 0,
-      source: 'walk_in',
-    },
+  // RHF only for step 3 inputs (adults / children / special_requests)
+  const { register, watch } = useForm<Step3Fields>({
+    defaultValues: { adults: 1, children: 0 },
   })
 
+  // Guest form
   const {
     register: registerGuest,
     handleSubmit: handleSubmitGuest,
     formState: { errors: guestErrors },
   } = useForm<GuestFormData>({ resolver: zodResolver(guestSchema) })
 
-  const checkOut = watch('check_out_date')
-  const roomId = watch('room_id')
-  const ratePerNight = watch('rate_per_night')
-
-  const nights = checkOut ? nightsBetween(today, checkOut) : 0
-  const total = nights * (ratePerNight ?? 0)
-  const selectedRoom = availableRooms.find((r) => r.id === roomId)
+  const nights = checkOutDate ? nightsBetween(today, checkOutDate) : 0
 
   useEffect(() => {
-    if (checkOut && checkOut > today) {
-      getAvailableRooms(today, checkOut)
-        .then(setAvailableRooms)
+    if (checkOutDate && checkOutDate > today) {
+      getAvailableRooms(today, checkOutDate)
+        .then((rooms) => {
+          setAvailableRooms(rooms)
+          // deselect room if it's no longer available
+          if (selectedRoom && !rooms.find((r) => r.id === selectedRoom.id)) {
+            setSelectedRoom(null)
+          }
+        })
         .catch((e) => toast.error(e.message))
     }
-  }, [checkOut, today, toast])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkOutDate, today])
 
   useEffect(() => {
     if (step === 2) {
@@ -85,18 +95,12 @@ export default function WalkInPage() {
     }
   }, [step, guestSearch, toast])
 
-  const handleRoomSelect = (room: Room) => {
-    setValue('room_id', room.id)
-    setValue('rate_per_night', room.base_rate)
-  }
-
   const handleGuestSelect = (guest: Guest) => {
     if (guest.is_banned) {
       toast.error(`⚠️ ${guest.first_name} ${guest.last_name} is banned: ${guest.ban_reason ?? 'No reason given'}`)
       return
     }
     setSelectedGuest(guest)
-    setValue('guest_id', guest.id)
     setStep(3)
   }
 
@@ -106,7 +110,6 @@ export default function WalkInPage() {
     try {
       const guest = await createGuest({ ...data, property_id: property.id })
       setSelectedGuest(guest)
-      setValue('guest_id', guest.id)
       setStep(3)
     } catch (e: unknown) {
       toast.error((e as Error).message)
@@ -115,16 +118,28 @@ export default function WalkInPage() {
     }
   }
 
-  const onSubmit = async (data: ReservationFormData) => {
-    if (!property) return
+  // Build payload directly from component state — no RHF hidden-input tricks needed
+  const handleCheckIn = async () => {
+    if (!property || !selectedGuest || !selectedRoom || !checkOutDate) return
     setLoading(true)
     try {
-      const reservation = await walkInCheckIn({ ...data, property_id: property.id })
-      toast.success(`${selectedGuest?.first_name} checked in to Room ${selectedRoom?.number}`)
+      const reservation = await walkInCheckIn({
+        property_id: property.id,
+        room_id: selectedRoom.id,
+        guest_id: selectedGuest.id,
+        check_in_date: today,
+        check_out_date: checkOutDate,
+        rate_per_night: selectedRoom.base_rate,
+        adults: watch('adults') ?? 1,
+        children: watch('children') ?? 0,
+        source: 'walk_in',
+        special_requests: watch('special_requests') || undefined,
+      })
+      toast.success(`${selectedGuest.first_name} checked in to Room ${selectedRoom.number}`)
       router.push(`/reservations/${reservation.id}`)
+      router.refresh()
     } catch (e: unknown) {
       toast.error((e as Error).message)
-    } finally {
       setLoading(false)
     }
   }
@@ -152,12 +167,10 @@ export default function WalkInPage() {
 
       {/* Step indicator */}
       <div className="flex gap-2">
-        {[1, 2, 3].map((s) => (
+        {([1, 2, 3] as Step[]).map((s) => (
           <div
             key={s}
-            className={`flex-1 h-2 rounded-full transition-colors ${
-              s <= step ? 'bg-primary' : 'bg-gray-200'
-            }`}
+            className={`flex-1 h-2 rounded-full transition-colors ${s <= step ? 'bg-primary' : 'bg-gray-200'}`}
           />
         ))}
       </div>
@@ -171,33 +184,32 @@ export default function WalkInPage() {
       {step === 1 && (
         <Card>
           <h2 className="font-semibold text-secondary mb-4">Select Room & Departure Date</h2>
-
           <div className="mb-6">
-            <Input
-              label="Check-out Date"
+            <label className="block text-sm font-medium text-secondary mb-1.5">
+              Check-out Date
+            </label>
+            <input
               type="date"
-              min={today}
-              error={errors.check_out_date?.message}
-              {...register('check_out_date')}
+              min={tomorrow}
+              value={checkOutDate}
+              onChange={(e) => setCheckOutDate(e.target.value)}
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
-          {checkOut && checkOut > today && (
+          {checkOutDate && checkOutDate > today && (
             <>
               <p className="text-sm text-gray-500 mb-3">
                 {availableRooms.length} rooms available · {nights} night{nights !== 1 ? 's' : ''}
               </p>
-              {errors.room_id && (
-                <p className="text-sm text-error mb-3">{errors.room_id.message}</p>
-              )}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-64 overflow-y-auto">
                 {availableRooms.map((room) => (
                   <button
                     key={room.id}
                     type="button"
-                    onClick={() => handleRoomSelect(room)}
+                    onClick={() => setSelectedRoom(room)}
                     className={`p-3 rounded-lg border-2 text-left transition-all ${
-                      roomId === room.id
+                      selectedRoom?.id === room.id
                         ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-primary/40'
                     }`}
@@ -209,17 +221,17 @@ export default function WalkInPage() {
                     </p>
                   </button>
                 ))}
+                {availableRooms.length === 0 && (
+                  <p className="col-span-3 text-center text-gray-400 py-4">No rooms available</p>
+                )}
               </div>
-              {availableRooms.length === 0 && (
-                <p className="text-center text-gray-400 py-4">No rooms available</p>
-              )}
             </>
           )}
 
           <div className="pt-4">
             <Button
               onClick={() => setStep(2)}
-              disabled={!roomId || nights <= 0}
+              disabled={!selectedRoom || nights <= 0}
               className="w-full"
             >
               {t('actions.next')}
@@ -309,92 +321,74 @@ export default function WalkInPage() {
         </Card>
       )}
 
-      {/* Step 3: Confirm & Check In */}
-      {step === 3 && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          {/* register fields set via defaultValues/setValue so zodResolver sees them */}
-          <input type="hidden" {...register('check_in_date')} />
-          <input type="hidden" {...register('source')} />
-          <input type="hidden" {...register('room_id')} />
-          <input type="hidden" {...register('guest_id')} />
-          <input type="hidden" {...register('rate_per_night', { valueAsNumber: true })} />
-          <Card>
-            <h2 className="font-semibold text-secondary mb-4">Confirm & Check In</h2>
-            <div className="space-y-3 mb-6">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Guest</span>
-                <span className="font-medium text-secondary">
-                  {selectedGuest?.first_name} {selectedGuest?.last_name}
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Room</span>
-                <span className="font-medium text-secondary">
-                  Room {selectedRoom?.number} ({selectedRoom?.room_type})
-                </span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Check In</span>
-                <span className="font-medium text-secondary">{formatDate(today)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Check Out</span>
-                <span className="font-medium text-secondary">{formatDate(checkOut)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Nights</span>
-                <span className="font-medium text-secondary">{nights}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Rate / Night</span>
-                <span className="font-medium text-secondary">{formatCurrency(ratePerNight ?? 0)}</span>
-              </div>
-              <div className="flex justify-between text-sm font-semibold border-t border-gray-200 pt-3">
-                <span className="text-secondary">Total</span>
-                <span className="text-primary text-lg">{formatCurrency(total)}</span>
-              </div>
+      {/* Step 3: Confirm & Check In — no <form>, payload built directly from state */}
+      {step === 3 && selectedGuest && selectedRoom && (
+        <Card>
+          <h2 className="font-semibold text-secondary mb-4">Confirm & Check In</h2>
+          <div className="space-y-3 mb-6">
+            <Row label="Guest" value={`${selectedGuest.first_name} ${selectedGuest.last_name}`} />
+            <Row label="Room" value={`Room ${selectedRoom.number} (${selectedRoom.room_type})`} />
+            <Row label="Check In" value={formatDate(today)} />
+            <Row label="Check Out" value={formatDate(checkOutDate)} />
+            <Row label="Nights" value={String(nights)} />
+            <Row label="Rate / Night" value={formatCurrency(selectedRoom.base_rate)} />
+            <div className="flex justify-between text-sm font-semibold border-t border-gray-200 pt-3">
+              <span className="text-secondary">Total</span>
+              <span className="text-primary text-lg">{formatCurrency(nights * selectedRoom.base_rate)}</span>
             </div>
+          </div>
 
-            <div className="grid grid-cols-2 gap-4 mb-6">
-              <Input
-                label="Adults"
-                type="number"
-                min={1}
-                max={10}
-                error={errors.adults?.message}
-                {...register('adults', { valueAsNumber: true })}
-              />
-              <Input
-                label="Children"
-                type="number"
-                min={0}
-                max={10}
-                error={errors.children?.message}
-                {...register('children', { valueAsNumber: true })}
-              />
-            </div>
+          <div className="grid grid-cols-2 gap-4 mb-6">
+            <Input
+              label="Adults"
+              type="number"
+              min={1}
+              max={10}
+              {...register('adults', { valueAsNumber: true })}
+            />
+            <Input
+              label="Children"
+              type="number"
+              min={0}
+              max={10}
+              {...register('children', { valueAsNumber: true })}
+            />
+          </div>
 
-            <div className="flex flex-col gap-1 mb-6">
-              <label className="text-sm font-medium text-secondary">{t('reservation.specialRequests')}</label>
-              <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                rows={2}
-                {...register('special_requests')}
-              />
-            </div>
+          <div className="flex flex-col gap-1 mb-6">
+            <label className="text-sm font-medium text-secondary">{t('reservation.specialRequests')}</label>
+            <textarea
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              rows={2}
+              {...register('special_requests')}
+            />
+          </div>
 
-            <div className="flex gap-3">
-              <Button type="submit" loading={loading} className="flex-1">
-                <Image src="/filled/checkin.svg" alt="" width={18} height={18} />
-                Check In Now
-              </Button>
-              <Button type="button" variant="outline" onClick={() => setStep(2)}>
-                {t('actions.back')}
-              </Button>
-            </div>
-          </Card>
-        </form>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              loading={loading}
+              onClick={handleCheckIn}
+              className="flex-1"
+            >
+              <Image src="/filled/checkin.svg" alt="" width={18} height={18} />
+              Check In Now
+            </Button>
+            <Button type="button" variant="outline" onClick={() => setStep(2)}>
+              {t('actions.back')}
+            </Button>
+          </div>
+        </Card>
       )}
+    </div>
+  )
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between text-sm">
+      <span className="text-gray-500">{label}</span>
+      <span className="font-medium text-secondary">{value}</span>
     </div>
   )
 }
