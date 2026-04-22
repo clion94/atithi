@@ -1,7 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
-  /* config options here */
-};
+  turbopack: {
+    // Explicitly anchor Turbopack to this project directory so it doesn't
+    // walk up into the parent "Atithi OS" folder to resolve node_modules.
+    root: __dirname,
+  },
+}
 
-export default nextConfig;
+export default nextConfig

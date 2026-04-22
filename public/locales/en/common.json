@@ -1,0 +1,164 @@
+{
+  "app": {
+    "name": "Atithi",
+    "tagline": "The guest is everything."
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "reservations": "Reservations",
+    "rooms": "Rooms",
+    "guests": "Guests",
+    "housekeeping": "Housekeeping",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "reservation": {
+    "new": "New Reservation",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "guest": "Guest",
+    "room": "Room",
+    "nights": "Nights",
+    "rate": "Rate / Night",
+    "total": "Total",
+    "adults": "Adults",
+    "children": "Children",
+    "source": "Booking Source",
+    "specialRequests": "Special Requests",
+    "status": {
+      "confirmed": "Confirmed",
+      "checked_in": "Checked In",
+      "checked_out": "Checked Out",
+      "cancelled": "Cancelled",
+      "no_show": "No Show"
+    },
+    "source_options": {
+      "walk_in": "Walk-in",
+      "phone": "Phone",
+      "booking_com": "Booking.com",
+      "expedia": "Expedia",
+      "direct_web": "Direct Web",
+      "other": "Other"
+    }
+  },
+  "room": {
+    "number": "Room Number",
+    "type": "Room Type",
+    "floor": "Floor",
+    "rate": "Nightly Rate",
+    "capacity": "Capacity",
+    "status": {
+      "clean": "Clean",
+      "dirty": "Dirty",
+      "inspected": "Inspected",
+      "out_of_order": "Out of Order",
+      "do_not_disturb": "Do Not Disturb"
+    },
+    "type_options": {
+      "standard": "Standard",
+      "double": "Double",
+      "suite": "Suite",
+      "king": "King",
+      "smoking": "Smoking",
+      "accessible": "Accessible"
+    }
+  },
+  "guest": {
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone",
+    "email": "Email",
+    "idType": "ID Type",
+    "idNumber": "ID Number",
+    "address": "Address",
+    "notes": "Notes",
+    "banned": "Banned Guest",
+    "banReason": "Ban Reason",
+    "vip": "VIP",
+    "stayHistory": "Stay History"
+  },
+  "housekeeping": {
+    "title": "Housekeeping",
+    "updateStatus": "Update Status",
+    "lastUpdated": "Last Updated",
+    "allRooms": "All Rooms",
+    "dirtyOnly": "Dirty Only",
+    "inspectedOnly": "Inspected Only"
+  },
+  "reports": {
+    "daily": "Daily Report",
+    "occupancy": "Occupancy",
+    "roomsSold": "Rooms Sold",
+    "revenue": "Revenue",
+    "adr": "ADR",
+    "arrivals": "Arrivals",
+    "departures": "Departures",
+    "inHouse": "In House"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "confirm": "Confirm",
+    "checkIn": "Check In",
+    "checkOut": "Check Out",
+    "newReservation": "New Reservation",
+    "viewAll": "View All",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "signOut": "Sign Out",
+    "banGuest": "Ban Guest",
+    "unbanGuest": "Remove Ban"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "noResults": "No results found",
+    "today": "Today",
+    "language": "Language",
+    "of": "of",
+    "nights": "night(s)",
+    "guests": "guest(s)",
+    "property": "Property",
+    "confirmDelete": "Are you sure you want to delete this?",
+    "thisActionCannotBeUndone": "This action cannot be undone."
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "signingIn": "Signing in...",
+    "welcomeBack": "Welcome back",
+    "signInToContinue": "Sign in to manage your property"
+  },
+  "settings": {
+    "propertyInfo": "Property Information",
+    "propertyName": "Property Name",
+    "address": "Street Address",
+    "city": "City",
+    "state": "State",
+    "zip": "ZIP Code",
+    "phone": "Phone",
+    "email": "Email",
+    "timezone": "Timezone",
+    "checkInTime": "Default Check-in Time",
+    "checkOutTime": "Default Check-out Time",
+    "myProfile": "My Profile",
+    "fullName": "Full Name",
+    "role": "Role"
+  },
+  "dashboard": {
+    "occupied": "Occupied",
+    "available": "Available",
+    "arrivalsToday": "Arrivals Today",
+    "departuresToday": "Departures Today",
+    "todayArrivals": "Today's Arrivals",
+    "todayDepartures": "Today's Departures",
+    "quickActions": "Quick Actions",
+    "occupancyRate": "Occupancy Rate"
+  }
+}

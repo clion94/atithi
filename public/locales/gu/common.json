@@ -1,0 +1,164 @@
+{
+  "app": {
+    "name": "અતિથ્ય",
+    "tagline": "મહેમાન એ સર્વસ્વ છે."
+  },
+  "nav": {
+    "dashboard": "ડૅશબૉર્ડ",
+    "reservations": "બૂકિંગ",
+    "rooms": "રૂમ",
+    "guests": "મહેમાન",
+    "housekeeping": "હાઉસકૅપિંગ",
+    "reports": "રિપૉર્ટ",
+    "settings": "સૅટિંગ"
+  },
+  "reservation": {
+    "new": "નવૂ બૂકિંગ",
+    "checkIn": "ચૅક ઇન",
+    "checkOut": "ચૅક આઉટ",
+    "guest": "મહેમાન",
+    "room": "રૂમ",
+    "nights": "રાત",
+    "rate": "દર / રાત",
+    "total": "કૂલ",
+    "adults": "પૂખ્ત",
+    "children": "બાળક",
+    "source": "બૂકિંગ સ્ત્રોત",
+    "specialRequests": "ખાસ વિનંતી",
+    "status": {
+      "confirmed": "પૂષ્ટિ થઇ",
+      "checked_in": "ચૅક ઇન",
+      "checked_out": "ચૅક આઉટ",
+      "cancelled": "રદ",
+      "no_show": "આવ્યા નહીં"
+    },
+    "source_options": {
+      "walk_in": "સીધા આવ્યા",
+      "phone": "ફૉન",
+      "booking_com": "Booking.com",
+      "expedia": "Expedia",
+      "direct_web": "વૅબસાઇટ",
+      "other": "અન્ય"
+    }
+  },
+  "room": {
+    "number": "રૂમ નંબર",
+    "type": "રૂમ પ્રકાર",
+    "floor": "માળ",
+    "rate": "રૉજ ભાડૂ",
+    "capacity": "ક્ષમતા",
+    "status": {
+      "clean": "સ્વચ્છ",
+      "dirty": "ગંદૂ",
+      "inspected": "તપાસ્યૂ",
+      "out_of_order": "બંધ",
+      "do_not_disturb": "ખલૅલ ન પહૉંચાડો"
+    },
+    "type_options": {
+      "standard": "સ્ટાન્ડર્ડ",
+      "double": "ડબલ",
+      "suite": "સ્યૂટ",
+      "king": "કિંગ",
+      "smoking": "સ્મૉકિંગ",
+      "accessible": "સૂલભ"
+    }
+  },
+  "guest": {
+    "firstName": "પ્રથમ નામ",
+    "lastName": "અટક",
+    "phone": "ફૉન",
+    "email": "ઇ-મૅઇલ",
+    "idType": "ઓળખ પ્રકાર",
+    "idNumber": "ઓળખ નંબર",
+    "address": "સરનામૂ",
+    "notes": "નૉંધ",
+    "banned": "પ્રતિબંધિત મહેમાન",
+    "banReason": "પ્રતિબંધ કારણ",
+    "vip": "VIP",
+    "stayHistory": "રહેવાનો ઇતિહાસ"
+  },
+  "housekeeping": {
+    "title": "હાઉસકૅપિંગ",
+    "updateStatus": "સ્ટૅટસ અપડૅટ",
+    "lastUpdated": "છૅલ્લૅ અપડૅટ",
+    "allRooms": "બધા રૂમ",
+    "dirtyOnly": "ફક્ત ગંદા",
+    "inspectedOnly": "ફક્ત તપાસ્યૅલ"
+  },
+  "reports": {
+    "daily": "રૉજ રિપૉર્ટ",
+    "occupancy": "ભરાવ",
+    "roomsSold": "વૅચૅલ રૂમ",
+    "revenue": "આવક",
+    "adr": "સ.દૈ.ભ.",
+    "arrivals": "આગમન",
+    "departures": "પ્રસ્થાન",
+    "inHouse": "ઘરૅ"
+  },
+  "settings": {
+    "propertyInfo": "મિલકત માહિતી",
+    "propertyName": "મિલકતનું નામ",
+    "address": "સરનામું",
+    "city": "શહેર",
+    "state": "રાજ્ય",
+    "zip": "ZIP કોડ",
+    "phone": "ફોન",
+    "email": "ઈમેઈલ",
+    "timezone": "સમય ઝોન",
+    "checkInTime": "ચૅક-ઇન સમય",
+    "checkOutTime": "ચૅક-આઉટ સમય",
+    "myProfile": "મારી પ્રોફાઇલ",
+    "fullName": "પૂરું નામ",
+    "role": "ભૂમિકા"
+  },
+  "actions": {
+    "save": "સૅાચવો",
+    "cancel": "રદ કરો",
+    "delete": "ઢૅ નૅ",
+    "edit": "ફૅ",
+    "search": "શૉધો",
+    "confirm": "પૂષ્ટિ કરો",
+    "checkIn": "ચૅક ઇન",
+    "checkOut": "ચૅક આઉટ",
+    "newReservation": "નવૂ બૂકિંગ",
+    "viewAll": "બધૂ જૂઓ",
+    "close": "બંધ",
+    "back": "પાછૂ",
+    "next": "આગૅ",
+    "signOut": "સૅ. આઉટ",
+    "banGuest": "પ્રતિબંધ",
+    "unbanGuest": "પ્રતિ. હટાવો"
+  },
+  "common": {
+    "loading": "લૉ...",
+    "error": "ભૂલ",
+    "noResults": "કૉઇ પ્રિ. ન.",
+    "today": "આજ",
+    "language": "ભાષા",
+    "of": "ની",
+    "nights": "રાત",
+    "guests": "મ.",
+    "property": "મૉટ.",
+    "confirmDelete": "ખ. ઢ. ખ.?",
+    "thisActionCannotBeUndone": "ન."
+  },
+  "auth": {
+    "signIn": "સૅ. ઇ.",
+    "email": "ઇ.",
+    "password": "પ.",
+    "forgotPassword": "ભ. પ.?",
+    "signingIn": "ઇ...",
+    "welcomeBack": "આ. સ્.",
+    "signInToContinue": "સ. ઇ. ક."
+  },
+  "dashboard": {
+    "occupied": "ભ.",
+    "available": "ઉ.",
+    "arrivalsToday": "આ. આ.",
+    "departuresToday": "આ. પ.",
+    "todayArrivals": "આ. આ.",
+    "todayDepartures": "આ. પ.",
+    "quickActions": "ઝ. ક.",
+    "occupancyRate": "ભ. દ."
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "app": {
+    "name": "अतिथि",
+    "tagline": "मेहमान है सब कुछ।"
+  },
+  "nav": {
+    "dashboard": "डॅशबॉर्ड",
+    "reservations": "बॅकिंग",
+    "rooms": "कमरे",
+    "guests": "मेहमान",
+    "housekeeping": "हाउसकॅपिंग",
+    "reports": "रिपॅर्ट",
+    "settings": "सॅटिंग"
+  },
+  "reservation": {
+    "new": "नई बुकिंग",
+    "checkIn": "चेक इन",
+    "checkOut": "चेक आउट",
+    "guest": "मेहमान",
+    "room": "कमरा",
+    "nights": "रातें",
+    "rate": "दर / रात",
+    "total": "कुल",
+    "adults": "वयस्क",
+    "children": "बच्चे",
+    "source": "बुकिंग स्रोत",
+    "specialRequests": "विशेष अनुरोध",
+    "status": {
+      "confirmed": "पुष्टि हुई",
+      "checked_in": "चेक इन",
+      "checked_out": "चेक आउट",
+      "cancelled": "रद्द",
+      "no_show": "नहीं आए"
+    },
+    "source_options": {
+      "walk_in": "सीधे आए",
+      "phone": "फोन",
+      "booking_com": "Booking.com",
+      "expedia": "Expedia",
+      "direct_web": "वेबसाइट",
+      "other": "अन्य"
+    }
+  },
+  "room": {
+    "number": "कमरा नंबर",
+    "type": "कमरे का प्रकार",
+    "floor": "मंज़िल",
+    "rate": "रात का किराया",
+    "capacity": "क्षमता",
+    "status": {
+      "clean": "साफ",
+      "dirty": "गंदा",
+      "inspected": "जांचा गया",
+      "out_of_order": "बंद",
+      "do_not_disturb": "परेशान न करें"
+    },
+    "type_options": {
+      "standard": "स्टैंडर्ड",
+      "double": "डबल",
+      "suite": "सुईट",
+      "king": "किंग",
+      "smoking": "स्मोकिंग",
+      "accessible": "सुलभ"
+    }
+  },
+  "guest": {
+    "firstName": "पहला नाम",
+    "lastName": "उपनाम",
+    "phone": "फोन",
+    "email": "ईमेल",
+    "idType": "ID प्रकार",
+    "idNumber": "ID नंबर",
+    "address": "पता",
+    "notes": "नोट",
+    "banned": "प्रतिबंधित मेहमान",
+    "banReason": "प्रतिबंध का कारण",
+    "vip": "VIP",
+    "stayHistory": "रुकने का इतिहास"
+  },
+  "housekeeping": {
+    "title": "हाउसकीपिंग",
+    "updateStatus": "स्थिति अपडेट करें",
+    "lastUpdated": "अंतिम अपडेट",
+    "allRooms": "सभी कमरे",
+    "dirtyOnly": "केवल गंदे",
+    "inspectedOnly": "केवल जांचे गए"
+  },
+  "reports": {
+    "daily": "दैनिक रिपोर्ट",
+    "occupancy": "अधिभोग",
+    "roomsSold": "बिके कमरे",
+    "revenue": "आय",
+    "adr": "औसत दैनिक दर",
+    "arrivals": "आगमन",
+    "departures": "प्रस्थान",
+    "inHouse": "ठहरे हुए"
+  },
+  "settings": {
+    "propertyInfo": "संपत्ति जानकारी",
+    "propertyName": "संपत्ति का नाम",
+    "address": "पता",
+    "city": "शहर",
+    "state": "राज्य",
+    "zip": "ZIP कोड",
+    "phone": "फोन",
+    "email": "ईमेल",
+    "timezone": "समय क्षेत्र",
+    "checkInTime": "चेक-इन समय",
+    "checkOutTime": "चेक-आउट समय",
+    "myProfile": "मेरी प्रोफ़ाइल",
+    "fullName": "पूरा नाम",
+    "role": "भूमिका"
+  },
+  "actions": {
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं",
+    "edit": "संपादित करें",
+    "search": "खोजें",
+    "confirm": "पुष्टि करें",
+    "checkIn": "चेक इन",
+    "checkOut": "चेक आउट",
+    "newReservation": "नई बुकिंग",
+    "viewAll": "सभी देखें",
+    "close": "बंद करें",
+    "back": "वापस",
+    "next": "आगे",
+    "signOut": "साइन आउट",
+    "banGuest": "प्रतिबंध लगाएं",
+    "unbanGuest": "प्रतिबंध हटाएं"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हुआ",
+    "noResults": "कोई परिणाम नहीं मिला",
+    "today": "आज",
+    "language": "भाषा",
+    "of": "का",
+    "nights": "रात(ें)",
+    "guests": "मेहमान",
+    "property": "प्रॉपर्टी",
+    "confirmDelete": "क्या आप इसे हटाना चाहते हैं?",
+    "thisActionCannotBeUndone": "यह क्रिया पूर्ववत नहीं की जा सकती।"
+  },
+  "auth": {
+    "signIn": "साइन इन",
+    "email": "ईमेल",
+    "password": "पासवर्ड",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "signingIn": "साइन इन हो रहा है...",
+    "welcomeBack": "स्वागत है",
+    "signInToContinue": "अपनी प्रॉपर्टी प्रबंधित करने के लिए साइन इन करें"
+  },
+  "dashboard": {
+    "occupied": "व्यस्त",
+    "available": "उपलब्ध",
+    "arrivalsToday": "आज आगमन",
+    "departuresToday": "आज प्रस्थान",
+    "todayArrivals": "आज के आगमन",
+    "todayDepartures": "आज के प्रस्थान",
+    "quickActions": "त्वरित क्रियाएं",
+    "occupancyRate": "अधिभोग दर"
+  }
+}
