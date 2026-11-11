@@ -80,8 +80,8 @@ export async function walkInCheckIn(
     .single()
   if (error) throw error
 
-  await supabase.from('rooms').update({ status: 'occupied' }).eq('id', data.room_id)
-
+  // Occupancy is derived from reservations; rooms.status is housekeeping state only
+  // (clean/dirty/inspected/...) and has no 'occupied' value, so it is left unchanged here.
   return data
 }
 
@@ -95,9 +95,7 @@ export async function checkIn(id: string): Promise<Reservation> {
     .single()
   if (error) throw error
 
-  // Mark room as dirty on checkout (occupied for now)
-  await supabase.from('rooms').update({ status: 'dirty' }).eq('id', data.room_id)
-
+  // Room status is housekeeping state only, so check-in leaves it unchanged.
   return data
 }
 

@@ -12,6 +12,7 @@ import { getGuestReservations } from '@/lib/services/reservations'
 import { guestSchema, type GuestFormData } from '@/lib/validations/guest'
 import { ReservationStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
+import Textarea from '@/components/ui/Textarea'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
@@ -139,11 +140,11 @@ export default function GuestProfilePage() {
             Back
           </Button>
         </Link>
-        <h1 className="font-display text-2xl font-bold text-secondary">
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">
           {guest.first_name} {guest.last_name}
         </h1>
         {guest.is_banned && (
-          <span className="flex items-center gap-1 text-xs text-error bg-red-50 px-2 py-1 rounded-full">
+          <span className="flex items-center gap-1 text-xs font-semibold text-error bg-red-500/10 px-2.5 py-1 rounded-full">
             <AlertTriangle className="h-3 w-3" />
             Banned
           </span>
@@ -152,7 +153,7 @@ export default function GuestProfilePage() {
 
       {/* Ban warning */}
       {guest.is_banned && (
-        <div className="flex items-start gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
+        <div className="flex items-start gap-3 p-4 bg-red-500/10 rounded-2xl">
           <AlertTriangle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-medium text-error">This guest is banned</p>
@@ -166,7 +167,7 @@ export default function GuestProfilePage() {
       {/* Guest Info */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-secondary">Guest Information</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Guest Information</h2>
           <div className="flex gap-2">
             {canBan && (
               guest.is_banned ? (
@@ -229,14 +230,9 @@ export default function GuestProfilePage() {
               <Input label="State" {...register('state')} />
               <Input label="ZIP" {...register('zip')} />
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-secondary">{t('guest.notes')}</label>
-              <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                rows={3}
+            <Textarea label={t('guest.notes')} rows={3}
                 {...register('notes')}
               />
-            </div>
             <div className="flex gap-3">
               <Button type="submit" loading={saving} className="flex-1">
                 {t('actions.save')}
@@ -257,7 +253,7 @@ export default function GuestProfilePage() {
             {guest.notes && (
               <div className="col-span-2">
                 <dt className="text-gray-500 mb-1">{t('guest.notes')}</dt>
-                <dd className="text-secondary bg-gray-50 rounded-lg p-3 text-sm">{guest.notes}</dd>
+                <dd className="text-secondary bg-black/[0.03] rounded-xl p-3 text-sm">{guest.notes}</dd>
               </div>
             )}
           </dl>
@@ -266,7 +262,7 @@ export default function GuestProfilePage() {
 
       {/* Stay History */}
       <Card>
-        <h2 className="font-semibold text-secondary mb-4">{t('guest.stayHistory')}</h2>
+        <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('guest.stayHistory')}</h2>
         {reservations.length === 0 ? (
           <p className="text-sm text-gray-400 py-4 text-center">{t('common.noResults')}</p>
         ) : (
@@ -275,7 +271,7 @@ export default function GuestProfilePage() {
               const nights = nightsBetween(r.check_in_date, r.check_out_date)
               return (
                 <Link key={r.id} href={`/reservations/${r.id}`}>
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer border border-gray-100">
+                  <div className="flex items-center justify-between p-3 rounded-xl hover:bg-black/[0.03] transition-colors cursor-pointer ring-1 ring-black/5">
                     <div>
                       <p className="font-medium text-secondary text-sm">
                         Room {r.room?.number}
@@ -308,16 +304,11 @@ export default function GuestProfilePage() {
         <p className="text-sm text-gray-600 mb-4">
           Banning <strong>{guest.first_name} {guest.last_name}</strong> will prevent new reservations and show a warning.
         </p>
-        <div className="flex flex-col gap-1 mb-6">
-          <label className="text-sm font-medium text-secondary">Reason for ban *</label>
-          <textarea
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            rows={3}
+        <Textarea label="Reason for ban *" className="mb-6" rows={3}
             placeholder="Describe why this guest is being banned..."
             value={banReason}
             onChange={(e) => setBanReason(e.target.value)}
           />
-        </div>
         <div className="flex gap-3">
           <Button
             variant="danger"

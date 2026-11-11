@@ -13,6 +13,7 @@ import { getGuests, createGuest } from '@/lib/services/guests'
 import { reservationSchema, type ReservationFormData } from '@/lib/validations/reservation'
 import { guestSchema, type GuestFormData } from '@/lib/validations/guest'
 import Button from '@/components/ui/Button'
+import Textarea from '@/components/ui/Textarea'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
@@ -148,7 +149,7 @@ export default function NewReservationPage() {
             Back
           </Button>
         </Link>
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('reservation.new')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('reservation.new')}</h1>
       </div>
 
       {/* Step indicator */}
@@ -156,8 +157,8 @@ export default function NewReservationPage() {
         {[1, 2, 3].map((s) => (
           <div
             key={s}
-            className={`flex-1 h-2 rounded-full transition-colors ${
-              s <= step ? 'bg-primary' : 'bg-gray-200'
+            className={`flex-1 h-1.5 rounded-full transition-colors ${
+              s <= step ? 'bg-primary' : 'bg-black/10'
             }`}
           />
         ))}
@@ -171,7 +172,7 @@ export default function NewReservationPage() {
       {/* Step 1: Dates & Room */}
       {step === 1 && (
         <Card>
-          <h2 className="font-semibold text-secondary mb-4">Select Dates & Room</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Select Dates & Room</h2>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <Input
               label={t('reservation.checkIn')}
@@ -203,10 +204,10 @@ export default function NewReservationPage() {
                     key={room.id}
                     type="button"
                     onClick={() => handleRoomSelect(room)}
-                    className={`p-3 rounded-lg border-2 text-left transition-all ${
+                    className={`p-3.5 rounded-2xl ring-2 text-left transition active:scale-[0.98] ${
                       roomId === room.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-primary/40'
+                        ? 'ring-primary bg-primary/5'
+                        : 'ring-black/5 bg-white hover:ring-primary/40'
                     }`}
                   >
                     <p className="font-bold text-secondary">Room {room.number}</p>
@@ -239,7 +240,7 @@ export default function NewReservationPage() {
       {step === 2 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-secondary">Select or Add Guest</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Select or Add Guest</h2>
             <Button
               size="sm"
               variant={newGuestMode ? 'outline' : 'ghost'}
@@ -283,7 +284,7 @@ export default function NewReservationPage() {
                     key={guest.id}
                     type="button"
                     onClick={() => handleGuestSelect(guest)}
-                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary/40 hover:bg-gray-50 transition-all"
+                    className="w-full text-left p-3.5 rounded-2xl bg-white ring-1 ring-black/5 hover:ring-primary/40 hover:bg-black/[0.02] transition active:scale-[0.99]"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -320,7 +321,7 @@ export default function NewReservationPage() {
       {step === 3 && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Card>
-            <h2 className="font-semibold text-secondary mb-4">Confirm Reservation</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Confirm Reservation</h2>
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Guest</span>
@@ -350,7 +351,7 @@ export default function NewReservationPage() {
                 <span className="text-gray-500">Rate / Night</span>
                 <span className="font-medium text-secondary">{formatCurrency(ratePerNight ?? 0)}</span>
               </div>
-              <div className="flex justify-between text-sm font-semibold border-t border-gray-200 pt-3">
+              <div className="flex justify-between text-sm font-semibold border-t border-black/5 pt-3">
                 <span className="text-secondary">Total</span>
                 <span className="text-primary text-lg">{formatCurrency(total)}</span>
               </div>
@@ -383,14 +384,9 @@ export default function NewReservationPage() {
               className="mb-4"
             />
 
-            <div className="flex flex-col gap-1 mb-6">
-              <label className="text-sm font-medium text-secondary">{t('reservation.specialRequests')}</label>
-              <textarea
-                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-                rows={3}
+            <Textarea label={t('reservation.specialRequests')} className="mb-6" rows={3}
                 {...register('special_requests')}
               />
-            </div>
 
             <div className="flex gap-3">
               <Button type="submit" loading={loading} className="flex-1">

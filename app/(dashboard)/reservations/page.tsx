@@ -62,7 +62,7 @@ export default function ReservationsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('nav.reservations')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('nav.reservations')}</h1>
         <div className="flex items-center gap-2">
           <Link href="/reservations/walkin">
             <Button size="sm" variant="outline">
@@ -86,10 +86,10 @@ export default function ReservationsPage() {
             key={key}
             onClick={() => setFilter(key)}
             className={cn(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+              'px-4 min-h-9 rounded-full text-sm font-medium transition active:scale-[0.97]',
               filter === key
-                ? 'bg-secondary text-white'
-                : 'bg-white border border-gray-200 text-secondary hover:bg-gray-50'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'bg-white ring-1 ring-black/5 text-secondary hover:bg-black/[0.03]'
             )}
           >
             {label}
@@ -116,28 +116,28 @@ export default function ReservationsPage() {
           <p>{t('common.noResults')}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-card ring-1 ring-black/5 overflow-hidden">
           {/* Desktop table */}
           <div className="hidden md:block overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
+              <thead className="border-b border-black/5">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Guest</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Room</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Check In</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Check Out</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Nights</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Total</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wide">Status</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Guest</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Room</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check In</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check Out</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Nights</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-black/5">
                 {filtered.map((r) => {
                   const nights = nightsBetween(r.check_in_date, r.check_out_date)
                   return (
                     <tr
                       key={r.id}
-                      className="hover:bg-gray-50 cursor-pointer transition-colors"
+                      className="hover:bg-black/[0.03] cursor-pointer transition-colors"
                       onClick={() => window.location.href = `/reservations/${r.id}`}
                     >
                       <td className="px-4 py-3">
@@ -166,12 +166,12 @@ export default function ReservationsPage() {
           </div>
 
           {/* Mobile cards */}
-          <div className="md:hidden divide-y divide-gray-100">
+          <div className="md:hidden divide-y divide-black/5">
             {filtered.map((r) => {
               const nights = nightsBetween(r.check_in_date, r.check_out_date)
               return (
                 <Link key={r.id} href={`/reservations/${r.id}`}>
-                  <div className="p-4 hover:bg-gray-50 transition-colors">
+                  <div className="p-4 hover:bg-black/[0.03] transition-colors">
                     <div className="flex items-start justify-between mb-2">
                       <div>
                         <p className="font-semibold text-secondary">

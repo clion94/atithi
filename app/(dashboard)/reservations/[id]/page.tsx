@@ -106,7 +106,7 @@ export default function ReservationDetailPage() {
           </Button>
         </Link>
         <div className="flex items-center gap-3">
-          <h1 className="font-display text-2xl font-bold text-secondary">Reservation</h1>
+          <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">Reservation</h1>
           <ReservationStatusBadge status={reservation.status} />
         </div>
       </div>
@@ -140,7 +140,7 @@ export default function ReservationDetailPage() {
       {/* Reservation details */}
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
-          <h2 className="font-semibold text-secondary mb-4 flex items-center gap-2">
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4 flex items-center gap-2">
             <BedDouble className="h-4 w-4 text-primary" />
             Room & Stay
           </h2>
@@ -161,7 +161,7 @@ export default function ReservationDetailPage() {
         </Card>
 
         <Card>
-          <h2 className="font-semibold text-secondary mb-4">Guest Information</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Guest Information</h2>
           {reservation.guest ? (
             <dl className="space-y-3 text-sm">
               <InfoRow
@@ -175,7 +175,7 @@ export default function ReservationDetailPage() {
                 <InfoRow label="Email" value={reservation.guest.email} />
               )}
               {reservation.guest.is_banned && (
-                <div className="flex items-center gap-2 p-2 bg-red-50 rounded-lg text-error">
+                <div className="flex items-center gap-2 p-2.5 bg-red-500/10 rounded-xl text-error">
                   <span className="text-xs font-medium">⚠️ This guest is banned: {reservation.guest.ban_reason}</span>
                 </div>
               )}
@@ -194,7 +194,7 @@ export default function ReservationDetailPage() {
       {/* Timestamps */}
       {(reservation.actual_check_in || reservation.actual_check_out) && (
         <Card>
-          <h2 className="font-semibold text-secondary mb-4">Activity</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Activity</h2>
           <dl className="space-y-3 text-sm">
             {reservation.actual_check_in && (
               <InfoRow label="Checked In" value={formatDateTime(reservation.actual_check_in)} />

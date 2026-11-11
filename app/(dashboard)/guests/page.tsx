@@ -38,7 +38,7 @@ export default function GuestsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('nav.guests')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('nav.guests')}</h1>
         <span className="text-sm text-gray-500">{guests.length} guests</span>
       </div>
 
@@ -60,11 +60,11 @@ export default function GuestsPage() {
           <p>{t('common.noResults')}</p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div className="divide-y divide-gray-100">
+        <div className="bg-white rounded-2xl shadow-card ring-1 ring-black/5 overflow-hidden">
+          <div className="divide-y divide-black/5">
             {guests.map((guest) => (
               <Link key={guest.id} href={`/guests/${guest.id}`}>
-                <div className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors cursor-pointer">
+                <div className="flex items-center justify-between p-4 hover:bg-black/[0.03] transition-colors cursor-pointer">
                   <div className="flex items-center gap-3">
                     <div className="h-9 w-9 rounded-full bg-secondary/10 flex items-center justify-center">
                       <span className="text-sm font-semibold text-secondary">

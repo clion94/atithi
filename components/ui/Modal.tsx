@@ -44,31 +44,31 @@ export default function Modal({ open, onClose, title, children, size = 'md' }: M
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/30 backdrop-blur-md animate-fade-in"
         onClick={onClose}
         aria-hidden
       />
       <div
         className={cn(
-          'relative w-full bg-white rounded-2xl shadow-xl z-10 max-h-[90vh] overflow-y-auto',
+          'relative w-full bg-white/95 backdrop-blur-xl rounded-3xl shadow-float ring-1 ring-black/5 z-10 max-h-[90vh] overflow-y-auto animate-pop-in',
           sizeClasses[size]
         )}
         role="dialog"
         aria-modal
       >
         {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-secondary">{title}</h2>
+          <div className="flex items-center justify-between px-6 pt-5 pb-3">
+            <h2 className="text-xl font-semibold tracking-tight text-secondary">{title}</h2>
             <button
               onClick={onClose}
-              className="rounded-lg p-1 hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors"
+              className="grid h-8 w-8 place-items-center rounded-full bg-black/5 text-gray-500 hover:bg-black/10 hover:text-gray-700 transition-colors"
               aria-label="Close"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </button>
           </div>
         )}
-        <div className="p-6">{children}</div>
+        <div className="px-6 pb-6 pt-3">{children}</div>
       </div>
     </div>
   )

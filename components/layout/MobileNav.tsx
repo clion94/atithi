@@ -53,7 +53,7 @@ export default function MobileNav() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden p-2 rounded-lg hover:bg-gray-100 text-secondary"
+        className="md:hidden grid h-11 w-11 place-items-center rounded-full hover:bg-black/5 text-secondary"
         aria-label="Open menu"
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
@@ -66,11 +66,11 @@ export default function MobileNav() {
       {open && (
         <>
           <div
-            className="fixed inset-0 bg-black/50 z-40 md:hidden"
+            className="fixed inset-0 bg-black/30 backdrop-blur-sm animate-fade-in z-40 md:hidden"
             onClick={() => setOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 bg-secondary z-50 md:hidden flex flex-col">
-            <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
+          <div className="fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-secondary to-[#16233e] shadow-float z-50 md:hidden flex flex-col animate-slide-in">
+            <div className="flex items-center justify-between px-6 py-5 border-b border-white/8">
               <Image
                 src="/logos/atithi-logo-128x128.png"
                 alt={t('app.name')}
@@ -80,7 +80,7 @@ export default function MobileNav() {
               />
               <button
                 onClick={() => setOpen(false)}
-                className="text-white/70 hover:text-white p-1"
+                className="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-white/70 hover:text-white"
                 aria-label="Close menu"
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
@@ -90,7 +90,7 @@ export default function MobileNav() {
               </button>
             </div>
 
-            <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
+            <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
               {navItems.map(({ key, href, icon }) => {
                 const isActive = pathname === href || pathname.startsWith(href + '/')
                 return (
@@ -99,10 +99,10 @@ export default function MobileNav() {
                     href={href}
                     onClick={() => setOpen(false)}
                     className={cn(
-                      'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                      'flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight transition-colors',
                       isActive
-                        ? 'bg-white/10 text-white'
-                        : 'text-white/60 hover:bg-white/5 hover:text-white/90'
+                        ? 'bg-white/15 text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]'
+                        : 'text-white/60 hover:bg-white/8 hover:text-white/90'
                     )}
                   >
                     <NavIcon name={icon} active={isActive} />
@@ -112,18 +112,18 @@ export default function MobileNav() {
               })}
             </nav>
 
-            <div className="px-3 py-4 border-t border-white/10 space-y-0.5">
+            <div className="px-3 py-4 border-t border-white/8 space-y-1">
               <Link
                 href="/settings"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white/90 transition-colors"
+                className="flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight text-white/60 hover:bg-white/8 hover:text-white/90 transition-colors"
               >
                 <NavIcon name="settings" active={pathname === '/settings'} />
                 {t('nav.settings')}
               </Link>
               <button
                 onClick={handleSignOut}
-                className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white/90 transition-colors"
+                className="w-full flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight text-white/60 hover:bg-white/8 hover:text-white/90 transition-colors"
               >
                 <Image src="/outline/logout.svg" alt="" width={22} height={22} className="shrink-0" />
                 {t('actions.signOut')}
