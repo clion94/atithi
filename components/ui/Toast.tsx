@@ -44,7 +44,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={value}>
       {children}
-      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm w-full">
+      <div className="fixed top-4 right-4 left-4 sm:left-auto z-[60] flex flex-col gap-2 sm:max-w-sm w-auto sm:w-full">
         {toasts.map((toast) => (
           <ToastItem key={toast.id} toast={toast} onRemove={remove} />
         ))}
@@ -61,22 +61,23 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
   }
 
   const bgClasses: Record<ToastType, string> = {
-    success: 'bg-white border-l-4 border-success',
-    error: 'bg-white border-l-4 border-error',
-    warning: 'bg-white border-l-4 border-warning',
+    success: 'bg-white/90',
+    error: 'bg-white/90',
+    warning: 'bg-white/90',
   }
 
   return (
     <div
       className={cn(
-        'flex items-start gap-3 rounded-lg shadow-lg px-4 py-3 animate-in slide-in-from-right-5',
+        'flex items-start gap-3 rounded-2xl shadow-float ring-1 ring-black/5 backdrop-blur-xl px-4 py-3 animate-slide-in',
         bgClasses[toast.type]
       )}
     >
       {icons[toast.type]}
-      <p className="flex-1 text-sm text-secondary">{toast.message}</p>
+      <p className="flex-1 text-[15px] leading-snug text-secondary">{toast.message}</p>
       <button
         onClick={() => onRemove(toast.id)}
+        aria-label="Dismiss"
         className="text-gray-400 hover:text-gray-600 flex-shrink-0"
       >
         <X className="h-4 w-4" />

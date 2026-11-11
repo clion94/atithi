@@ -18,7 +18,7 @@ export default function Card({ children, className, padding = 'md' }: CardProps)
   return (
     <div
       className={cn(
-        'bg-white rounded-xl border border-gray-200 shadow-sm',
+        'bg-white rounded-2xl shadow-card ring-1 ring-black/5',
         paddingClasses[padding],
         className
       )}
@@ -36,6 +36,6 @@ export function CardHeader({ children, className }: { children: ReactNode; class
 
 export function CardTitle({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <h3 className={cn('text-lg font-semibold text-secondary', className)}>{children}</h3>
+    <h3 className={cn('text-[17px] font-semibold tracking-tight text-secondary', className)}>{children}</h3>
   )
 }

@@ -49,9 +49,9 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex md:flex-col md:w-60 bg-secondary min-h-screen">
+    <aside className="hidden md:flex md:flex-col md:w-64 bg-gradient-to-b from-secondary to-[#16233e] min-h-screen sticky top-0 h-screen">
       {/* Logo */}
-      <div className="px-6 py-5 border-b border-white/10">
+      <div className="px-6 py-5 border-b border-white/8">
         <Image
           src="/logos/atithi-logo-128x128.png"
           alt={t('app.name')}
@@ -60,12 +60,12 @@ export default function Sidebar() {
           priority
         />
         {property && (
-          <p className="text-xs text-white/50 mt-2 truncate">{property.name}</p>
+          <p className="text-[13px] text-white/50 mt-2 truncate">{property.name}</p>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map(({ key, href, icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
           return (
@@ -73,10 +73,10 @@ export default function Sidebar() {
               key={key}
               href={href}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight transition-colors',
                 isActive
-                  ? 'bg-white/10 text-white'
-                  : 'text-white/60 hover:bg-white/5 hover:text-white/90'
+                  ? 'bg-white/15 text-white shadow-[inset_0_0_0_1px_rgb(255_255_255/0.06)]'
+                  : 'text-white/60 hover:bg-white/8 hover:text-white/90'
               )}
             >
               <NavIcon name={icon} active={isActive} />
@@ -87,17 +87,17 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="px-3 py-4 border-t border-white/10 space-y-0.5">
+      <div className="px-3 py-4 border-t border-white/8 space-y-1">
         <Link
           href="/settings"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white/90 transition-colors"
+          className="flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight text-white/60 hover:bg-white/8 hover:text-white/90 transition-colors"
         >
           <NavIcon name="settings" active={pathname === '/settings'} />
           {t('nav.settings')}
         </Link>
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:bg-white/5 hover:text-white/90 transition-colors"
+          className="w-full flex items-center gap-3 px-3 min-h-11 rounded-xl text-[15px] font-medium tracking-tight text-white/60 hover:bg-white/8 hover:text-white/90 transition-colors"
         >
           <Image src="/outline/logout.svg" alt="" width={22} height={22} className="shrink-0" />
           {t('actions.signOut')}

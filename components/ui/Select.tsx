@@ -21,9 +21,9 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, label, error, hint, options, placeholder, id, ...props }, ref) => {
     const selectId = id ?? label?.toLowerCase().replace(/\s+/g, '-')
     return (
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={selectId} className="text-sm font-medium text-secondary">
+          <label htmlFor={selectId} className="text-[13px] font-medium text-gray-500">
             {label}
           </label>
         )}
@@ -32,10 +32,10 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
             ref={ref}
             id={selectId}
             className={cn(
-              'w-full appearance-none rounded-lg border border-gray-300 bg-white px-3 py-2 pr-8 text-sm text-secondary transition-colors',
-              'focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20',
-              error && 'border-error focus:border-error focus:ring-error/20',
-              props.disabled && 'bg-gray-50 cursor-not-allowed opacity-60',
+              'w-full appearance-none rounded-xl border-0 bg-white pl-3.5 pr-9 min-h-11 text-[15px] text-secondary ring-1 ring-inset ring-black/10 transition',
+              'focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary',
+              error && 'ring-error/60 focus:ring-error',
+              props.disabled && 'bg-gray-100 cursor-not-allowed opacity-60',
               className
             )}
             {...props}
@@ -51,7 +51,7 @@ const Select = forwardRef<HTMLSelectElement, SelectProps>(
               </option>
             ))}
           </select>
-          <ChevronDown className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
         </div>
         {hint && !error && <p className="text-xs text-gray-500">{hint}</p>}
         {error && <p className="text-xs text-error">{error}</p>}
