@@ -69,7 +69,7 @@ export default function SetupPage() {
 
   return (
     <div className="w-full max-w-lg">
-      <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-float ring-1 ring-white/20 overflow-hidden animate-pop-in">
         {/* Header */}
         <div className="bg-secondary px-8 py-6 flex items-center gap-4">
           <Image
@@ -87,7 +87,7 @@ export default function SetupPage() {
         <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-6 space-y-5">
           {/* Your name */}
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">About You</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">About You</p>
             <Input
               label="Your Name"
               placeholder="e.g. Ramesh Patel"
@@ -96,11 +96,11 @@ export default function SetupPage() {
             />
           </div>
 
-          <div className="border-t border-gray-100" />
+          <div className="border-t border-black/5" />
 
           {/* Property details */}
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Property Details</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Property Details</p>
             <div className="space-y-4">
               <Input
                 label="Property Name *"
@@ -133,11 +133,11 @@ export default function SetupPage() {
             </div>
           </div>
 
-          <div className="border-t border-gray-100" />
+          <div className="border-t border-black/5" />
 
           {/* Times & timezone */}
           <div>
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Hours</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Hours</p>
             <div className="space-y-4">
               <Select
                 label="Timezone"

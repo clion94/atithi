@@ -71,28 +71,30 @@ export default function LoginPage() {
       {/* Language selector */}
       <div className="flex justify-end mb-6">
         <div className="relative group">
-          <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors">
+          <button className="flex items-center gap-1.5 px-3.5 min-h-9 rounded-full text-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors">
             <Globe className="h-4 w-4" />
             <span>{LANGUAGES.find((l) => l.code === i18n.language)?.label ?? 'English'}</span>
           </button>
-          <div className="absolute right-0 top-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg py-1 min-w-[140px] hidden group-hover:block z-10">
+          <div className="absolute right-0 top-full pt-1.5 hidden group-hover:block group-focus-within:block z-10">
+            <div className="bg-white/95 backdrop-blur-xl rounded-2xl shadow-float ring-1 ring-black/5 p-1.5 min-w-[160px] animate-pop-in">
             {LANGUAGES.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 transition-colors ${
+                className={`w-full text-left px-3 py-2 text-sm hover:bg-black/[0.03] transition-colors ${
                   i18n.language === lang.code ? 'text-primary font-medium' : 'text-secondary'
                 }`}
               >
                 {lang.label}
               </button>
             ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Card */}
-      <div className="bg-white rounded-2xl shadow-2xl p-8">
+      <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-float ring-1 ring-white/20 p-8 animate-pop-in">
         {/* Branding */}
         <div className="flex flex-col items-center mb-8">
           <Image
@@ -103,12 +105,12 @@ export default function LoginPage() {
             className="mb-3"
             priority
           />
-          <p className="text-sm text-gray-500 italic">{t('app.tagline')}</p>
+          <p className="text-sm text-gray-500">{t('app.tagline')}</p>
         </div>
 
         {/* Form */}
         <div className="mb-6">
-          <h2 className="text-xl font-semibold text-secondary">{t('auth.welcomeBack')}</h2>
+          <h2 className="text-2xl font-semibold tracking-tight text-secondary">{t('auth.welcomeBack')}</h2>
           <p className="text-sm text-gray-500 mt-1">{t('auth.signInToContinue')}</p>
         </div>
 

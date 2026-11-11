@@ -50,7 +50,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-secondary">
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">
           {t('nav.dashboard')}
         </h1>
         <Link href="/reservations/new">
@@ -91,7 +91,7 @@ export default function DashboardPage() {
       <div className="grid md:grid-cols-2 gap-6">
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-secondary">{t('dashboard.todayArrivals')}</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('dashboard.todayArrivals')}</h2>
             <Link href="/reservations?filter=arrivals" className="text-xs text-primary hover:underline">
               {t('actions.viewAll')}
             </Link>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
             <div className="space-y-3">
               {stats?.arrivals.slice(0, 5).map((r) => (
                 <Link key={r.id} href={`/reservations/${r.id}`}>
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between p-3 rounded-xl hover:bg-black/[0.03] transition-colors">
                     <div>
                       <p className="text-sm font-medium text-secondary">
                         {r.guest?.first_name} {r.guest?.last_name}
@@ -122,7 +122,7 @@ export default function DashboardPage() {
 
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-secondary">{t('dashboard.todayDepartures')}</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('dashboard.todayDepartures')}</h2>
             <Link href="/reservations?filter=departures" className="text-xs text-primary hover:underline">
               {t('actions.viewAll')}
             </Link>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
             <div className="space-y-3">
               {stats?.departures.slice(0, 5).map((r) => (
                 <Link key={r.id} href={`/reservations/${r.id}`}>
-                  <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center justify-between p-3 rounded-xl hover:bg-black/[0.03] transition-colors">
                     <div>
                       <p className="text-sm font-medium text-secondary">
                         {r.guest?.first_name} {r.guest?.last_name}
@@ -154,7 +154,7 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <Card>
-        <h2 className="font-semibold text-secondary mb-4">{t('dashboard.quickActions')}</h2>
+        <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('dashboard.quickActions')}</h2>
         <div className="flex flex-wrap gap-3">
           <Link href="/reservations/walkin">
             <Button variant="primary">
@@ -200,11 +200,11 @@ function StatCard({
     <Card padding="sm">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">{label}</p>
+          <p className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{label}</p>
           <p className="text-3xl font-bold text-secondary mt-1">{value}</p>
           {sub && <p className="text-xs text-gray-400 mt-0.5">{sub}</p>}
         </div>
-        <div className="p-2 bg-amber-50 rounded-lg">
+        <div className="p-2.5 bg-amber-500/10 rounded-xl">
           <Image src={`/duotone/${icon}.svg`} alt="" width={28} height={28} />
         </div>
       </div>

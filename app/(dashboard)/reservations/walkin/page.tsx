@@ -13,6 +13,7 @@ import { getAvailableRooms } from '@/lib/services/rooms'
 import { getGuests, createGuest } from '@/lib/services/guests'
 import { guestSchema, type GuestFormData } from '@/lib/validations/guest'
 import Button from '@/components/ui/Button'
+import Textarea from '@/components/ui/Textarea'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
 import { useToast } from '@/components/ui/Toast'
@@ -155,12 +156,12 @@ export default function WalkInPage() {
         </Link>
         <div className="flex items-center gap-2.5">
           <Image src="/duotone/checkin.svg" alt="" width={28} height={28} />
-          <h1 className="font-display text-2xl font-bold text-secondary">Walk-in Check-in</h1>
+          <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">Walk-in Check-in</h1>
         </div>
       </div>
 
       {/* Today banner */}
-      <div className="flex items-center gap-2 px-4 py-3 rounded-lg bg-accent/10 border border-accent/20 text-sm text-accent font-medium">
+      <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-accent/10 text-sm text-accent font-medium">
         <Image src="/duotone/checkin.svg" alt="" width={18} height={18} />
         Checking in today · {formatDate(today)}
       </div>
@@ -170,7 +171,7 @@ export default function WalkInPage() {
         {([1, 2, 3] as Step[]).map((s) => (
           <div
             key={s}
-            className={`flex-1 h-2 rounded-full transition-colors ${s <= step ? 'bg-primary' : 'bg-gray-200'}`}
+            className={`flex-1 h-1.5 rounded-full transition-colors ${s <= step ? 'bg-primary' : 'bg-black/10'}`}
           />
         ))}
       </div>
@@ -183,17 +184,14 @@ export default function WalkInPage() {
       {/* Step 1: Room & checkout date */}
       {step === 1 && (
         <Card>
-          <h2 className="font-semibold text-secondary mb-4">Select Room & Departure Date</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Select Room & Departure Date</h2>
           <div className="mb-6">
-            <label className="block text-sm font-medium text-secondary mb-1.5">
-              Check-out Date
-            </label>
-            <input
+            <Input
+              label="Check-out Date"
               type="date"
               min={tomorrow}
               value={checkOutDate}
               onChange={(e) => setCheckOutDate(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
 
@@ -208,10 +206,10 @@ export default function WalkInPage() {
                     key={room.id}
                     type="button"
                     onClick={() => setSelectedRoom(room)}
-                    className={`p-3 rounded-lg border-2 text-left transition-all ${
+                    className={`p-3.5 rounded-2xl ring-2 text-left transition active:scale-[0.98] ${
                       selectedRoom?.id === room.id
-                        ? 'border-primary bg-primary/5'
-                        : 'border-gray-200 hover:border-primary/40'
+                        ? 'ring-primary bg-primary/5'
+                        : 'ring-black/5 bg-white hover:ring-primary/40'
                     }`}
                   >
                     <p className="font-bold text-secondary">Room {room.number}</p>
@@ -244,7 +242,7 @@ export default function WalkInPage() {
       {step === 2 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-secondary">Select or Add Guest</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Select or Add Guest</h2>
             <Button
               size="sm"
               variant={newGuestMode ? 'outline' : 'ghost'}
@@ -288,7 +286,7 @@ export default function WalkInPage() {
                     key={guest.id}
                     type="button"
                     onClick={() => handleGuestSelect(guest)}
-                    className="w-full text-left p-3 rounded-lg border border-gray-200 hover:border-primary/40 hover:bg-gray-50 transition-all"
+                    className="w-full text-left p-3.5 rounded-2xl bg-white ring-1 ring-black/5 hover:ring-primary/40 hover:bg-black/[0.02] transition active:scale-[0.99]"
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -324,7 +322,7 @@ export default function WalkInPage() {
       {/* Step 3: Confirm & Check In — no <form>, payload built directly from state */}
       {step === 3 && selectedGuest && selectedRoom && (
         <Card>
-          <h2 className="font-semibold text-secondary mb-4">Confirm & Check In</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Confirm & Check In</h2>
           <div className="space-y-3 mb-6">
             <Row label="Guest" value={`${selectedGuest.first_name} ${selectedGuest.last_name}`} />
             <Row label="Room" value={`Room ${selectedRoom.number} (${selectedRoom.room_type})`} />
@@ -332,7 +330,7 @@ export default function WalkInPage() {
             <Row label="Check Out" value={formatDate(checkOutDate)} />
             <Row label="Nights" value={String(nights)} />
             <Row label="Rate / Night" value={formatCurrency(selectedRoom.base_rate)} />
-            <div className="flex justify-between text-sm font-semibold border-t border-gray-200 pt-3">
+            <div className="flex justify-between text-sm font-semibold border-t border-black/5 pt-3">
               <span className="text-secondary">Total</span>
               <span className="text-primary text-lg">{formatCurrency(nights * selectedRoom.base_rate)}</span>
             </div>
@@ -355,14 +353,9 @@ export default function WalkInPage() {
             />
           </div>
 
-          <div className="flex flex-col gap-1 mb-6">
-            <label className="text-sm font-medium text-secondary">{t('reservation.specialRequests')}</label>
-            <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              rows={2}
+          <Textarea label={t('reservation.specialRequests')} className="mb-6" rows={2}
               {...register('special_requests')}
             />
-          </div>
 
           <div className="flex gap-3">
             <Button

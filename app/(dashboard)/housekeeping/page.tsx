@@ -77,7 +77,7 @@ export default function HousekeepingPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('housekeeping.title')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('housekeeping.title')}</h1>
         <span className="text-sm text-gray-500">{filtered.length} rooms</span>
       </div>
 
@@ -88,10 +88,10 @@ export default function HousekeepingPage() {
             key={key}
             onClick={() => setFilter(key)}
             className={cn(
-              'px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+              'px-4 min-h-9 rounded-full text-sm font-medium transition active:scale-[0.97]',
               filter === key
-                ? 'bg-secondary text-white'
-                : 'bg-white border border-gray-200 text-secondary hover:bg-gray-50'
+                ? 'bg-secondary text-white shadow-sm'
+                : 'bg-white ring-1 ring-black/5 text-secondary hover:bg-black/[0.03]'
             )}
           >
             {label}
@@ -104,7 +104,7 @@ export default function HousekeepingPage() {
         {filtered.map((room) => (
           <div
             key={room.id}
-            className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm"
+            className="bg-white rounded-2xl shadow-card ring-1 ring-black/5 p-4"
           >
             <div className="flex items-center justify-between mb-3">
               <div>
@@ -148,7 +148,7 @@ export default function HousekeepingPage() {
                   variant="outline"
                   loading={updatingId === room.id}
                   onClick={() => handleStatusChange(room, 'dirty')}
-                  className="flex-1 border-amber-300 text-amber-700 hover:bg-amber-50"
+                  className="flex-1 text-amber-700 ring-amber-400/50 hover:bg-amber-50"
                 >
                   Mark Dirty
                 </Button>

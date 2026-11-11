@@ -9,6 +9,7 @@ import { getRooms, updateRoomStatus } from '@/lib/services/rooms'
 import { roomStatusSchema, type RoomStatusFormData } from '@/lib/validations/room'
 import { RoomStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
+import Textarea from '@/components/ui/Textarea'
 import Select from '@/components/ui/Select'
 import Modal from '@/components/ui/Modal'
 import Spinner from '@/components/ui/Spinner'
@@ -17,12 +18,12 @@ import type { Room, RoomStatus } from '@/types'
 import { cn } from '@/lib/utils/cn'
 import { formatCurrency } from '@/lib/utils/currency'
 
-const STATUS_COLORS: Record<RoomStatus, string> = {
-  clean: 'border-t-4 border-t-success',
-  dirty: 'border-t-4 border-t-warning',
-  inspected: 'border-t-4 border-t-blue-500',
-  out_of_order: 'border-t-4 border-t-error',
-  do_not_disturb: 'border-t-4 border-t-gray-400',
+const STATUS_DOT: Record<RoomStatus, string> = {
+  clean: 'bg-success',
+  dirty: 'bg-warning',
+  inspected: 'bg-blue-500',
+  out_of_order: 'bg-error',
+  do_not_disturb: 'bg-gray-400',
 }
 
 type FilterStatus = 'all' | RoomStatus
@@ -114,7 +115,7 @@ export default function RoomsPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('nav.rooms')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('nav.rooms')}</h1>
         <span className="text-sm text-gray-500">{filtered.length} rooms</span>
       </div>
 
@@ -146,12 +147,11 @@ export default function RoomsPage() {
               reset({ status: room.status, notes: room.notes ?? '' })
             }}
             className={cn(
-              'bg-white rounded-xl border border-gray-200 p-4 text-left hover:shadow-md transition-shadow cursor-pointer',
-              STATUS_COLORS[room.status]
+              'bg-white rounded-2xl shadow-card ring-1 ring-black/5 p-4 text-left hover:shadow-float transition duration-200 hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer'
             )}
           >
             <div className="flex items-center gap-2 mb-2">
-              <BedDouble className="h-4 w-4 text-gray-400" />
+              <span className={cn('h-2.5 w-2.5 rounded-full shrink-0', STATUS_DOT[room.status])} aria-hidden />
               <span className="font-bold text-secondary text-lg">{room.number}</span>
             </div>
             <p className="text-xs text-gray-500 capitalize mb-2">{room.room_type}</p>
@@ -186,14 +186,9 @@ export default function RoomsPage() {
             error={errors.status?.message}
             {...register('status')}
           />
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-secondary">Notes (optional)</label>
-            <textarea
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              rows={3}
+          <Textarea label="Notes (optional)" rows={3}
               {...register('notes')}
             />
-          </div>
           <div className="flex gap-3 pt-2">
             <Button type="submit" loading={updating} className="flex-1">
               Update Status

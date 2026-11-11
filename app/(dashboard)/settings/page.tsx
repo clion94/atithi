@@ -144,13 +144,13 @@ export default function SettingsPage() {
     <div className="max-w-2xl mx-auto space-y-8">
       <div className="flex items-center gap-2.5">
         <Image src="/duotone/settings.svg" alt="" width={28} height={28} />
-        <h1 className="font-display text-2xl font-bold text-secondary">{t('nav.settings')}</h1>
+        <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('nav.settings')}</h1>
       </div>
 
       {/* Property Settings */}
       <form onSubmit={handlePropSubmit(onSaveProperty)}>
         <Card>
-          <h2 className="font-semibold text-secondary mb-5">{t('settings.propertyInfo')}</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-5">{t('settings.propertyInfo')}</h2>
           <div className="space-y-4">
             <Input
               label={t('settings.propertyName')}
@@ -227,7 +227,7 @@ export default function SettingsPage() {
       {/* Profile Settings */}
       <form onSubmit={handleProfileSubmit(onSaveProfile)}>
         <Card>
-          <h2 className="font-semibold text-secondary mb-5">{t('settings.myProfile')}</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-5">{t('settings.myProfile')}</h2>
           <div className="space-y-4">
             <Input
               label={t('settings.fullName')}
@@ -240,7 +240,7 @@ export default function SettingsPage() {
               error={profileErrors.language?.message}
               {...regProfile('language')}
             />
-            <div className="flex items-center gap-3 px-4 py-3 rounded-lg bg-gray-50 border border-gray-100">
+            <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-black/[0.03]">
               <Image src="/outline/profile.svg" alt="" width={18} height={18} />
               <div>
                 <p className="text-sm font-medium text-secondary">{t('settings.role')}</p>
