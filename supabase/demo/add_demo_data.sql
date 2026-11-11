@@ -6,7 +6,7 @@ do $$
 declare
   -- Set this to the email you log in with. If your database has exactly one
   -- property you can leave it as is.
-  v_email       text := 'YOUR_LOGIN_EMAIL';
+  v_email       text := 'test@t.com';
 
   v_property_id uuid;
   v_count       integer;
