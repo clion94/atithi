@@ -11,7 +11,7 @@ VALUES (
   'TX',
   '78741',
   '(512) 555-0142',
-  'front@sunshineauistin.com',
+  'front@sunshineaustin.com',
   'America/Chicago'
 );
 
