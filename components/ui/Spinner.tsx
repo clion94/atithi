@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils/cn'
 
 interface SpinnerProps {
@@ -12,12 +15,14 @@ const sizeClasses = {
 }
 
 export default function Spinner({ size = 'md', className }: SpinnerProps) {
+  const { t } = useTranslation()
   return (
     <svg
       className={cn('animate-spin text-primary', sizeClasses[size], className)}
       fill="none"
       viewBox="0 0 24 24"
-      aria-label="Loading"
+      role="status"
+      aria-label={t('common.loading')}
     >
       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
       <path
@@ -30,11 +35,12 @@ export default function Spinner({ size = 'md', className }: SpinnerProps) {
 }
 
 export function LoadingScreen() {
+  const { t } = useTranslation()
   return (
     <div className="flex h-full min-h-screen items-center justify-center bg-surface">
       <div className="flex flex-col items-center gap-3">
         <Spinner size="lg" />
-        <p className="text-sm text-gray-500">Loading...</p>
+        <p className="text-sm text-gray-500">{t('common.loading')}</p>
       </div>
     </div>
   )

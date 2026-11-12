@@ -30,7 +30,8 @@
       "checked_in": "Checked In",
       "checked_out": "Checked Out",
       "cancelled": "Cancelled",
-      "no_show": "No Show"
+      "no_show": "No Show",
+      "label": "Status"
     },
     "source_options": {
       "walk_in": "Walk-in",
@@ -39,7 +40,31 @@
       "expedia": "Expedia",
       "direct_web": "Direct Web",
       "other": "Other"
-    }
+    },
+    "title": "Reservation",
+    "walkIn": "Walk-in",
+    "searchPlaceholder": "Search by guest name or phone…",
+    "nightsCount_one": "{{count}} night",
+    "nightsCount_other": "{{count}} nights",
+    "checkedInTo": "{{name}} checked in to room {{room}}",
+    "checkedOutName": "{{name}} checked out",
+    "created": "Reservation created",
+    "cancelled": "Reservation cancelled",
+    "markedNoShow": "Marked as no-show",
+    "notFound": "Reservation not found",
+    "guestInfo": "Guest information",
+    "name": "Name",
+    "viewGuest": "View guest profile",
+    "noGuestInfo": "No guest information",
+    "activity": "Activity",
+    "roomStay": "Room & stay",
+    "cancelTitle": "Cancel reservation",
+    "cancelConfirm": "Are you sure you want to cancel this reservation for <strong>{{name}}</strong>? This cannot be undone.",
+    "stepDatesRoom": "Dates & room",
+    "selectDatesRoom": "Select dates & room",
+    "noRoomsForDates": "No rooms available for these dates",
+    "selectGuest": "Select or add guest",
+    "confirmTitle": "Confirm reservation"
   },
   "room": {
     "number": "Room Number",
@@ -61,7 +86,10 @@
       "king": "King",
       "smoking": "Smoking",
       "accessible": "Accessible"
-    }
+    },
+    "newStatus": "New status",
+    "notesOptional": "Notes (optional)",
+    "statusUpdated": "Room status updated"
   },
   "guest": {
     "firstName": "First Name",
@@ -75,7 +103,31 @@
     "banned": "Banned Guest",
     "banReason": "Ban Reason",
     "vip": "VIP",
-    "stayHistory": "Stay History"
+    "stayHistory": "Stay History",
+    "count_one": "{{count}} guest",
+    "count_other": "{{count}} guests",
+    "searchPlaceholder": "Search by name or phone…",
+    "bannedBadge": "Banned",
+    "since": "Since {{date}}",
+    "notFound": "Guest not found",
+    "updated": "Guest updated",
+    "banApplied": "Guest has been banned",
+    "banRemoved": "Ban removed",
+    "isBanned": "This guest is banned",
+    "information": "Guest information",
+    "selectIdType": "Select ID type",
+    "idTypes": {
+      "drivers_license": "Driver's license",
+      "passport": "Passport",
+      "state_id": "State ID",
+      "other": "Other"
+    },
+    "memberSince": "Member since",
+    "banIntro": "Banning <strong>{{name}}</strong> will prevent new reservations and show a warning.",
+    "banReasonLabel": "Reason for ban *",
+    "banReasonPlaceholder": "Describe why this guest is being banned…",
+    "bannedWarning": "{{name}} is banned: {{reason}}",
+    "noReason": "No reason given"
   },
   "housekeeping": {
     "title": "Housekeeping",
@@ -83,7 +135,12 @@
     "lastUpdated": "Last Updated",
     "allRooms": "All Rooms",
     "dirtyOnly": "Dirty Only",
-    "inspectedOnly": "Inspected Only"
+    "inspectedOnly": "Inspected Only",
+    "markedAs": "Room {{room}} marked as {{status}}",
+    "markInspected": "Mark inspected",
+    "markClean": "Mark clean",
+    "markDirty": "Mark dirty",
+    "clearDnd": "Clear DND"
   },
   "reports": {
     "daily": "Daily Report",
@@ -93,7 +150,9 @@
     "adr": "ADR",
     "arrivals": "Arrivals",
     "departures": "Departures",
-    "inHouse": "In House"
+    "inHouse": "In House",
+    "noActivity": "No activity for this date",
+    "allReservations": "All reservations — {{date}}"
   },
   "actions": {
     "save": "Save",
@@ -111,7 +170,14 @@
     "next": "Next",
     "signOut": "Sign Out",
     "banGuest": "Ban Guest",
-    "unbanGuest": "Remove Ban"
+    "unbanGuest": "Remove Ban",
+    "loadMore": "Load more",
+    "noShow": "Mark no-show",
+    "keepIt": "Keep it",
+    "yesCancel": "Yes, cancel",
+    "addGuestContinue": "Add guest & continue",
+    "checkInNow": "Check in now",
+    "walkInCheckIn": "Walk-in check-in"
   },
   "common": {
     "loading": "Loading...",
@@ -124,7 +190,11 @@
     "guests": "guest(s)",
     "property": "Property",
     "confirmDelete": "Are you sure you want to delete this?",
-    "thisActionCannotBeUndone": "This action cannot be undone."
+    "thisActionCannotBeUndone": "This action cannot be undone.",
+    "retry": "Try again",
+    "dismiss": "Dismiss",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "auth": {
     "signIn": "Sign In",
@@ -149,7 +219,9 @@
     "checkOutTime": "Default Check-out Time",
     "myProfile": "My Profile",
     "fullName": "Full Name",
-    "role": "Role"
+    "role": "Role",
+    "propertySaved": "Property settings saved",
+    "profileSaved": "Profile saved"
   },
   "dashboard": {
     "occupied": "Occupied",
@@ -159,6 +231,36 @@
     "todayArrivals": "Today's Arrivals",
     "todayDepartures": "Today's Departures",
     "quickActions": "Quick Actions",
-    "occupancyRate": "Occupancy Rate"
+    "occupancyRate": "Occupancy Rate",
+    "ofSellable": "of {{rooms}} sellable rooms"
+  },
+  "filters": {
+    "all": "All",
+    "today": "Today",
+    "arrivals": "Arrivals",
+    "departures": "Departures",
+    "inhouse": "In-house"
+  },
+  "walkIn": {
+    "title": "Walk-in check-in",
+    "selectRoom": "Select room & departure date",
+    "checkOutDate": "Check-out date",
+    "noRooms": "No rooms available",
+    "confirmTitle": "Confirm & check in",
+    "checkingInToday": "Checking in today · {{date}}"
+  },
+  "setup": {
+    "welcome": "Welcome to Atithi",
+    "subtitle": "Let's set up your property",
+    "aboutYou": "About you",
+    "yourName": "Your name",
+    "yourNamePlaceholder": "e.g. Ramesh Patel",
+    "propertyDetails": "Property details",
+    "propertyName": "Property name *",
+    "propertyNamePlaceholder": "e.g. Sunshine Motel",
+    "hours": "Hours",
+    "create": "Create my property",
+    "creating": "Setting up…",
+    "footer": "You can update all of this later in Settings"
   }
 }

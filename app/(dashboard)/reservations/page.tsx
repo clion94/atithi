@@ -1,63 +1,58 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { Suspense, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import Image from 'next/image'
-import { Plus, Search, CalendarDays } from 'lucide-react'
-import { getReservations } from '@/lib/services/reservations'
+import { Plus, CalendarDays } from 'lucide-react'
+import type { ReservationFilter } from '@/lib/services/reservations'
+import { useReservations } from '@/hooks/useReservations'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import ErrorState from '@/components/ui/ErrorState'
 import { ReservationStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Spinner from '@/components/ui/Spinner'
-import { useToast } from '@/components/ui/Toast'
 import { formatDate, nightsBetween } from '@/lib/utils/dates'
 import { formatCurrency } from '@/lib/utils/currency'
-import type { Reservation } from '@/types'
 import { cn } from '@/lib/utils/cn'
 
-type FilterType = 'all' | 'today' | 'arrivals' | 'departures' | 'inhouse'
+const FILTER_KEYS: ReservationFilter[] = ['all', 'today', 'arrivals', 'departures', 'inhouse']
 
-const FILTERS: { key: FilterType; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'today', label: 'Today' },
-  { key: 'arrivals', label: 'Arrivals' },
-  { key: 'departures', label: 'Departures' },
-  { key: 'inhouse', label: 'In-House' },
-]
+function parseFilter(value: string | null): ReservationFilter {
+  return FILTER_KEYS.includes(value as ReservationFilter) ? (value as ReservationFilter) : 'all'
+}
 
 export default function ReservationsPage() {
-  const { t } = useTranslation()
-  const toast = useToast()
-  const searchParams = useSearchParams()
-  const [reservations, setReservations] = useState<Reservation[]>([])
-  const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState<FilterType>(
-    (searchParams.get('filter') as FilterType) ?? 'all'
+  // useSearchParams needs a Suspense boundary for the page to build/prerender.
+  return (
+    <Suspense fallback={null}>
+      <ReservationsList />
+    </Suspense>
   )
+}
 
-  const load = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await getReservations(filter === 'all' ? undefined : filter)
-      setReservations(data)
-    } catch (e: unknown) {
-      toast.error((e as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }, [filter, toast])
+function ReservationsList() {
+  const { t } = useTranslation()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<ReservationFilter>(parseFilter(searchParams.get('filter')))
+  const debouncedSearch = useDebouncedValue(search)
 
-  useEffect(() => { load() }, [load])
+  const { data, isPending, error, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useReservations(filter, debouncedSearch)
+  const filtered = data?.pages.flatMap((p) => p.rows) ?? []
+  const loading = isPending
 
-  const filtered = search
-    ? reservations.filter((r) => {
-        const name = `${r.guest?.first_name} ${r.guest?.last_name}`.toLowerCase()
-        return name.includes(search.toLowerCase())
-      })
-    : reservations
+  const FILTERS: { key: ReservationFilter; label: string }[] = [
+    { key: 'all', label: t('filters.all') },
+    { key: 'today', label: t('filters.today') },
+    { key: 'arrivals', label: t('filters.arrivals') },
+    { key: 'departures', label: t('filters.departures') },
+    { key: 'inhouse', label: t('filters.inhouse') },
+  ]
 
   return (
     <div className="space-y-6">
@@ -67,7 +62,7 @@ export default function ReservationsPage() {
           <Link href="/reservations/walkin">
             <Button size="sm" variant="outline">
               <Image src="/outline/checkin.svg" alt="" width={16} height={16} />
-              Walk-in
+              {t('reservation.walkIn')}
             </Button>
           </Link>
           <Link href="/reservations/new">
@@ -100,13 +95,15 @@ export default function ReservationsPage() {
       {/* Search */}
       <div className="max-w-sm">
         <Input
-          placeholder={`${t('actions.search')} by guest name...`}
+          placeholder={t('reservation.searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      {loading ? (
+      {error ? (
+        <ErrorState message={error.message} onRetry={() => refetch()} />
+      ) : loading ? (
         <div className="flex items-center justify-center h-48">
           <Spinner size="lg" />
         </div>
@@ -122,13 +119,13 @@ export default function ReservationsPage() {
             <table className="w-full">
               <thead className="border-b border-black/5">
                 <tr>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Guest</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Room</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check In</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check Out</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Nights</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Total</th>
-                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.guest')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.room')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.checkIn')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.checkOut')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.nights')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.total')}</th>
+                  <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.status.label')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-black/5">
@@ -138,7 +135,7 @@ export default function ReservationsPage() {
                     <tr
                       key={r.id}
                       className="hover:bg-black/[0.03] cursor-pointer transition-colors"
-                      onClick={() => window.location.href = `/reservations/${r.id}`}
+                      onClick={() => router.push(`/reservations/${r.id}`)}
                     >
                       <td className="px-4 py-3">
                         <div>
@@ -177,7 +174,7 @@ export default function ReservationsPage() {
                         <p className="font-semibold text-secondary">
                           {r.guest?.first_name} {r.guest?.last_name}
                         </p>
-                        <p className="text-sm text-gray-500">Room {r.room?.number} · {nights} nights</p>
+                        <p className="text-sm text-gray-500">{t('reservation.room')} {r.room?.number} · {t('reservation.nightsCount', { count: nights })}</p>
                       </div>
                       <ReservationStatusBadge status={r.status} />
                     </div>
@@ -192,6 +189,13 @@ export default function ReservationsPage() {
               )
             })}
           </div>
+          {hasNextPage && (
+            <div className="p-3 border-t border-black/5 text-center">
+              <Button variant="ghost" size="sm" onClick={() => fetchNextPage()} loading={isFetchingNextPage}>
+                {t('actions.loadMore')}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

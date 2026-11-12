@@ -1,26 +1,32 @@
 'use client'
 
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
 import { Globe } from 'lucide-react'
-import { setStoredLanguage } from '@/lib/i18n/client'
-import i18n from '@/lib/i18n/client'
+import { LANGUAGES, setStoredLanguage } from '@/lib/i18n/client'
+import { updateProfile } from '@/lib/services/settings'
+import { useToast } from '@/components/ui/Toast'
+import { errorMessage } from '@/lib/utils/errors'
 import { useAppStore } from '@/store/useAppStore'
+import { formatLongDate } from '@/lib/utils/dates'
 import MobileNav from './MobileNav'
 
-const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'gu', label: 'ગુજરાતી' },
-  { code: 'hi', label: 'हिंदी' },
-]
-
 export default function Header() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const toast = useToast()
   const property = useAppStore((s) => s.property)
+  const profile = useAppStore((s) => s.profile)
+  const setProfile = useAppStore((s) => s.setProfile)
 
-  const handleLanguageChange = (code: string) => {
+  const handleLanguageChange = async (code: string) => {
     setStoredLanguage(code)
     i18n.changeLanguage(code)
+    // Persist to the profile so the choice survives reloads and other devices.
+    if (!profile || profile.language === code) return
+    try {
+      setProfile(await updateProfile(profile.id, { language: code as typeof profile.language }))
+    } catch (e) {
+      toast.error(errorMessage(e))
+    }
   }
 
   return (
@@ -31,7 +37,7 @@ export default function Header() {
           <h1 className="text-[15px] font-semibold tracking-tight text-secondary hidden md:block">
             {property?.name ?? t('app.name')}
           </h1>
-          <p className="text-xs text-gray-500 tabular-nums">{format(new Date(), 'EEEE, MMMM d, yyyy')}</p>
+          <p className="text-xs text-gray-500 tabular-nums">{formatLongDate(property?.timezone, new Date(), i18n.language === 'en' ? 'en-US' : `${i18n.language}-IN`)}</p>
         </div>
       </div>
 

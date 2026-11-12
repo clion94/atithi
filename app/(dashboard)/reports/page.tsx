@@ -1,49 +1,25 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BarChart3, TrendingUp } from 'lucide-react'
-import { getDailyReport } from '@/lib/services/reservations'
+import { useDailyReport } from '@/hooks/useReports'
+import { usePropertyToday } from '@/hooks/usePropertyToday'
+import ErrorState from '@/components/ui/ErrorState'
 import Card from '@/components/ui/Card'
 import Input from '@/components/ui/Input'
 import Spinner from '@/components/ui/Spinner'
 import { ReservationStatusBadge } from '@/components/ui/Badge'
-import { useToast } from '@/components/ui/Toast'
-import { todayISO, formatDate, nightsBetween } from '@/lib/utils/dates'
+import { formatDate } from '@/lib/utils/dates'
 import { formatCurrency, formatCurrencyCompact } from '@/lib/utils/currency'
-
-interface DailyReport {
-  date: string
-  occupancy: number
-  rooms_sold: number
-  revenue: number
-  adr: number
-  arrivals_count: number
-  departures_count: number
-  inhouse_count: number
-  reservations: unknown[]
-}
 
 export default function ReportsPage() {
   const { t } = useTranslation()
-  const toast = useToast()
-  const [date, setDate] = useState(todayISO())
-  const [report, setReport] = useState<DailyReport | null>(null)
-  const [loading, setLoading] = useState(false)
-
-  const load = useCallback(async () => {
-    setLoading(true)
-    try {
-      const data = await getDailyReport(date)
-      setReport(data as DailyReport)
-    } catch (e: unknown) {
-      toast.error((e as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }, [date, toast])
-
-  useEffect(() => { load() }, [load])
+  const today = usePropertyToday()
+  const [pickedDate, setDate] = useState<string>()
+  const date = pickedDate ?? today ?? ''
+  const { data: report, isPending, error, refetch } = useDailyReport(date)
+  const loading = isPending
 
   return (
     <div className="space-y-6">
@@ -54,12 +30,14 @@ export default function ReportsPage() {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value)}
-            max={todayISO()}
+            max={today}
           />
         </div>
       </div>
 
-      {loading ? (
+      {error ? (
+        <ErrorState message={error.message} onRetry={() => refetch()} />
+      ) : loading ? (
         <div className="flex items-center justify-center h-48">
           <Spinner size="lg" />
         </div>
@@ -106,34 +84,25 @@ export default function ReportsPage() {
           {/* Transactions table */}
           <Card padding="none">
             <div className="px-6 py-4 border-b border-black/5">
-              <h2 className="text-[17px] font-semibold tracking-tight text-secondary">All Reservations — {formatDate(date)}</h2>
+              <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('reports.allReservations', { date: formatDate(date) })}</h2>
             </div>
-            {(report.reservations as ReturnType<typeof Array>).length === 0 ? (
-              <div className="text-center py-8 text-gray-400">No activity for this date</div>
+            {report.reservations.length === 0 ? (
+              <div className="text-center py-8 text-gray-400">{t('reports.noActivity')}</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full">
                   <thead className="border-b border-black/5">
                     <tr>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Guest</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Room</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check In</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Check Out</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Revenue</th>
-                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.guest')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.room')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.checkIn')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.checkOut')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.rate')}</th>
+                      <th className="px-4 py-3 text-left text-[11px] font-semibold text-gray-500 uppercase tracking-wider">{t('reservation.status.label')}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-black/5">
-                    {(report.reservations as Array<{
-                      id: string
-                      guest?: { first_name: string; last_name: string }
-                      room?: { number: string }
-                      check_in_date: string
-                      check_out_date: string
-                      rate_per_night: number
-                      status: string
-                    }>).map((r) => {
-                      const nights = nightsBetween(r.check_in_date, r.check_out_date)
+                    {report.reservations.map((r) => {
                       return (
                         <tr key={r.id} className="hover:bg-black/[0.03]">
                           <td className="px-4 py-3 text-sm font-medium text-secondary">
@@ -143,10 +112,10 @@ export default function ReportsPage() {
                           <td className="px-4 py-3 text-sm text-gray-600">{formatDate(r.check_in_date)}</td>
                           <td className="px-4 py-3 text-sm text-gray-600">{formatDate(r.check_out_date)}</td>
                           <td className="px-4 py-3 text-sm font-medium text-secondary">
-                            {formatCurrency(nights * r.rate_per_night)}
+                            {formatCurrency(r.rate_per_night)}
                           </td>
                           <td className="px-4 py-3">
-                            <ReservationStatusBadge status={r.status as import('@/types').ReservationStatus} />
+                            <ReservationStatusBadge status={r.status} />
                           </td>
                         </tr>
                       )

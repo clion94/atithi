@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { toError } from '@/lib/utils/errors'
 import type { Property, Profile } from '@/types'
 
 export async function updateProperty(
@@ -12,7 +13,7 @@ export async function updateProperty(
     .eq('id', id)
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error)
   return data
 }
 
@@ -27,6 +28,6 @@ export async function updateProfile(
     .eq('id', id)
     .select()
     .single()
-  if (error) throw error
+  if (error) throw toError(error)
   return data
 }

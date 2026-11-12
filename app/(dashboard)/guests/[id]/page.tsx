@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, Trans } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, AlertTriangle, ShieldCheck } from 'lucide-react'
@@ -75,7 +75,7 @@ export default function GuestProfilePage() {
       const updated = await updateGuest(guest.id, data)
       setGuest(updated)
       setEditing(false)
-      toast.success('Guest updated successfully')
+      toast.success(t('guest.updated'))
     } catch (e: unknown) {
       toast.error((e as Error).message)
     } finally {
@@ -90,7 +90,7 @@ export default function GuestProfilePage() {
       const updated = await setBanStatus(guest.id, true, banReason)
       setGuest(updated)
       setBanModal(false)
-      toast.success('Guest has been banned')
+      toast.success(t('guest.banApplied'))
     } catch (e: unknown) {
       toast.error((e as Error).message)
     } finally {
@@ -104,7 +104,7 @@ export default function GuestProfilePage() {
     try {
       const updated = await setBanStatus(guest.id, false)
       setGuest(updated)
-      toast.success('Ban removed')
+      toast.success(t('guest.banRemoved'))
     } catch (e: unknown) {
       toast.error((e as Error).message)
     } finally {
@@ -113,10 +113,10 @@ export default function GuestProfilePage() {
   }
 
   const idTypeOptions = [
-    { value: 'drivers_license', label: "Driver's License" },
-    { value: 'passport', label: 'Passport' },
-    { value: 'state_id', label: 'State ID' },
-    { value: 'other', label: 'Other' },
+    { value: 'drivers_license', label: t('guest.idTypes.drivers_license') },
+    { value: 'passport', label: t('guest.idTypes.passport') },
+    { value: 'state_id', label: t('guest.idTypes.state_id') },
+    { value: 'other', label: t('guest.idTypes.other') },
   ]
 
   if (loading) {
@@ -128,7 +128,7 @@ export default function GuestProfilePage() {
   }
 
   if (!guest) {
-    return <div className="text-center py-12 text-gray-400">Guest not found</div>
+    return <div className="text-center py-12 text-gray-400">{t('guest.notFound')}</div>
   }
 
   return (
@@ -137,7 +137,7 @@ export default function GuestProfilePage() {
         <Link href="/guests">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('actions.back')}
           </Button>
         </Link>
         <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">
@@ -146,7 +146,7 @@ export default function GuestProfilePage() {
         {guest.is_banned && (
           <span className="flex items-center gap-1 text-xs font-semibold text-error bg-red-500/10 px-2.5 py-1 rounded-full">
             <AlertTriangle className="h-3 w-3" />
-            Banned
+            {t('guest.bannedBadge')}
           </span>
         )}
       </div>
@@ -156,7 +156,7 @@ export default function GuestProfilePage() {
         <div className="flex items-start gap-3 p-4 bg-red-500/10 rounded-2xl">
           <AlertTriangle className="h-5 w-5 text-error flex-shrink-0 mt-0.5" />
           <div>
-            <p className="font-medium text-error">This guest is banned</p>
+            <p className="font-medium text-error">{t('guest.isBanned')}</p>
             {guest.ban_reason && (
               <p className="text-sm text-red-600 mt-1">{guest.ban_reason}</p>
             )}
@@ -167,7 +167,7 @@ export default function GuestProfilePage() {
       {/* Guest Info */}
       <Card>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Guest Information</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('guest.information')}</h2>
           <div className="flex gap-2">
             {canBan && (
               guest.is_banned ? (
@@ -220,15 +220,15 @@ export default function GuestProfilePage() {
             <Select
               label={t('guest.idType')}
               options={idTypeOptions}
-              placeholder="Select ID type"
+              placeholder={t('guest.selectIdType')}
               {...register('id_type')}
             />
             <Input label={t('guest.idNumber')} {...register('id_number')} />
             <Input label={t('guest.address')} {...register('address')} />
             <div className="grid grid-cols-3 gap-3">
-              <Input label="City" {...register('city')} />
-              <Input label="State" {...register('state')} />
-              <Input label="ZIP" {...register('zip')} />
+              <Input label={t('settings.city')} {...register('city')} />
+              <Input label={t('settings.state')} {...register('state')} />
+              <Input label={t('settings.zip')} {...register('zip')} />
             </div>
             <Textarea label={t('guest.notes')} rows={3}
                 {...register('notes')}
@@ -249,7 +249,7 @@ export default function GuestProfilePage() {
             <GuestField label={t('guest.idType')} value={guest.id_type?.replace(/_/g, ' ')} />
             <GuestField label={t('guest.idNumber')} value={guest.id_number} />
             <GuestField label={t('guest.address')} value={[guest.address, guest.city, guest.state, guest.zip].filter(Boolean).join(', ')} />
-            <GuestField label="Member Since" value={formatDate(guest.created_at)} />
+            <GuestField label={t('guest.memberSince')} value={formatDate(guest.created_at)} />
             {guest.notes && (
               <div className="col-span-2">
                 <dt className="text-gray-500 mb-1">{t('guest.notes')}</dt>
@@ -298,14 +298,18 @@ export default function GuestProfilePage() {
       <Modal
         open={banModal}
         onClose={() => setBanModal(false)}
-        title="Ban Guest"
+        title={t('actions.banGuest')}
         size="sm"
       >
         <p className="text-sm text-gray-600 mb-4">
-          Banning <strong>{guest.first_name} {guest.last_name}</strong> will prevent new reservations and show a warning.
+          <Trans
+            i18nKey="guest.banIntro"
+            values={{ name: `${guest.first_name} ${guest.last_name}` }}
+            components={{ strong: <strong /> }}
+          />
         </p>
-        <Textarea label="Reason for ban *" className="mb-6" rows={3}
-            placeholder="Describe why this guest is being banned..."
+        <Textarea label={t('guest.banReasonLabel')} className="mb-6" rows={3}
+            placeholder={t('guest.banReasonPlaceholder')}
             value={banReason}
             onChange={(e) => setBanReason(e.target.value)}
           />
@@ -317,7 +321,7 @@ export default function GuestProfilePage() {
             disabled={!banReason.trim()}
             className="flex-1"
           >
-            Ban Guest
+            {t('actions.banGuest')}
           </Button>
           <Button variant="outline" onClick={() => setBanModal(false)}>
             {t('actions.cancel')}

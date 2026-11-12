@@ -1,9 +1,13 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { Sparkles, Clock } from 'lucide-react'
-import { getRooms, updateRoomStatus } from '@/lib/services/rooms'
+import { updateRoomStatus } from '@/lib/services/rooms'
+import { useRooms } from '@/hooks/useRooms'
+import ErrorState from '@/components/ui/ErrorState'
+import { errorMessage } from '@/lib/utils/errors'
 import { RoomStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import Spinner from '@/components/ui/Spinner'
@@ -17,32 +21,19 @@ type FilterType = 'all' | 'dirty' | 'inspected' | 'clean'
 export default function HousekeepingPage() {
   const { t } = useTranslation()
   const toast = useToast()
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
+  const { data: rooms = [], isPending: loading, error: loadError, refetch } = useRooms()
   const [filter, setFilter] = useState<FilterType>('all')
   const [updatingId, setUpdatingId] = useState<string | null>(null)
-
-  const loadRooms = useCallback(async () => {
-    try {
-      const data = await getRooms()
-      setRooms(data)
-    } catch (e: unknown) {
-      toast.error((e as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }, [toast])
-
-  useEffect(() => { loadRooms() }, [loadRooms])
 
   const handleStatusChange = async (room: Room, status: RoomStatus) => {
     setUpdatingId(room.id)
     try {
       await updateRoomStatus(room.id, status)
-      toast.success(`Room ${room.number} marked as ${status}`)
-      setRooms((prev) => prev.map((r) => r.id === room.id ? { ...r, status } : r))
+      toast.success(t('housekeeping.markedAs', { room: room.number, status: t(`room.status.${status}`) }))
+      await queryClient.invalidateQueries({ queryKey: ['rooms'] })
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     } finally {
       setUpdatingId(null)
     }
@@ -61,9 +52,8 @@ export default function HousekeepingPage() {
     { key: 'clean', label: t('room.status.clean') },
   ]
 
-  const nextStatus: Partial<Record<RoomStatus, RoomStatus>> = {
-    dirty: 'inspected',
-    inspected: 'clean',
+  if (loadError) {
+    return <ErrorState message={loadError.message} onRetry={() => refetch()} />
   }
 
   if (loading) {
@@ -129,7 +119,7 @@ export default function HousekeepingPage() {
                   onClick={() => handleStatusChange(room, 'inspected')}
                   className="flex-1"
                 >
-                  Mark Inspected
+                  {t('housekeeping.markInspected')}
                 </Button>
               )}
               {room.status === 'inspected' && (
@@ -139,7 +129,7 @@ export default function HousekeepingPage() {
                   onClick={() => handleStatusChange(room, 'clean')}
                   className="flex-1"
                 >
-                  Mark Clean
+                  {t('housekeeping.markClean')}
                 </Button>
               )}
               {room.status === 'clean' && (
@@ -150,7 +140,7 @@ export default function HousekeepingPage() {
                   onClick={() => handleStatusChange(room, 'dirty')}
                   className="flex-1 text-amber-700 ring-amber-400/50 hover:bg-amber-50"
                 >
-                  Mark Dirty
+                  {t('housekeeping.markDirty')}
                 </Button>
               )}
               {room.status === 'do_not_disturb' && (
@@ -161,7 +151,7 @@ export default function HousekeepingPage() {
                   onClick={() => handleStatusChange(room, 'clean')}
                   className="flex-1"
                 >
-                  Clear DND
+                  {t('housekeeping.clearDnd')}
                 </Button>
               )}
             </div>

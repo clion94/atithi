@@ -2,10 +2,11 @@ import type { ReactNode } from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import I18nProvider from '@/components/I18nProvider'
+import QueryProvider from '@/components/QueryProvider'
 import { ToastProvider } from '@/components/ui/Toast'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
-import AppBootstrap from '@/components/AppBootstrap'
+import { AppStoreProvider } from '@/store/useAppStore'
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient()
@@ -34,17 +35,20 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   if (!property) redirect('/setup')
 
   return (
-    <I18nProvider>
-      <ToastProvider>
-        <AppBootstrap profile={profile} property={property} />
-        <div className="flex min-h-screen">
-          <Sidebar />
-          <div className="flex-1 flex flex-col min-w-0">
-            <Header />
-            <main className="flex-1 p-4 md:p-6">{children}</main>
-          </div>
-        </div>
-      </ToastProvider>
+    <I18nProvider language={profile.language}>
+      <QueryProvider>
+        <ToastProvider>
+          <AppStoreProvider profile={profile} property={property}>
+            <div className="flex min-h-screen">
+              <Sidebar />
+              <div className="flex-1 flex flex-col min-w-0">
+                <Header />
+                <main className="flex-1 p-4 md:p-6">{children}</main>
+              </div>
+            </div>
+          </AppStoreProvider>
+        </ToastProvider>
+      </QueryProvider>
     </I18nProvider>
   )
 }

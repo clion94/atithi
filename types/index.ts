@@ -113,6 +113,8 @@ export interface HousekeepingLog {
 export interface DashboardStats {
   occupied: number
   available: number
+  /** Rooms that can be sold (out-of-order rooms excluded). */
+  total_rooms: number
   checkins_today: number
   checkouts_today: number
   arrivals: Reservation[]

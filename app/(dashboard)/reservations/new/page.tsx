@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, AlertTriangle } from 'lucide-react'
 import Link from 'next/link'
@@ -20,6 +20,8 @@ import Card from '@/components/ui/Card'
 import { useToast } from '@/components/ui/Toast'
 import { useAppStore } from '@/store/useAppStore'
 import { nightsBetween, todayISO, formatDate } from '@/lib/utils/dates'
+import { useQueryClient } from '@tanstack/react-query'
+import { errorMessage } from '@/lib/utils/errors'
 import { formatCurrency } from '@/lib/utils/currency'
 import type { Room, Guest } from '@/types'
 
@@ -30,6 +32,7 @@ export default function NewReservationPage() {
   const router = useRouter()
   const toast = useToast()
   const property = useAppStore((s) => s.property)
+  const queryClient = useQueryClient()
   const [step, setStep] = useState<Step>(1)
   const [availableRooms, setAvailableRooms] = useState<Room[]>([])
   const [guests, setGuests] = useState<Guest[]>([])
@@ -41,13 +44,13 @@ export default function NewReservationPage() {
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
-      check_in_date: todayISO(),
+      check_in_date: todayISO(property?.timezone),
       adults: 1,
       children: 0,
       source: 'walk_in',
@@ -60,10 +63,10 @@ export default function NewReservationPage() {
     formState: { errors: guestErrors },
   } = useForm<GuestFormData>({ resolver: zodResolver(guestSchema) })
 
-  const checkIn = watch('check_in_date')
-  const checkOut = watch('check_out_date')
-  const roomId = watch('room_id')
-  const ratePerNight = watch('rate_per_night')
+  const checkIn = useWatch({ control, name: 'check_in_date' })
+  const checkOut = useWatch({ control, name: 'check_out_date' })
+  const roomId = useWatch({ control, name: 'room_id' })
+  const ratePerNight = useWatch({ control, name: 'rate_per_night' })
 
   const nights = checkIn && checkOut ? nightsBetween(checkIn, checkOut) : 0
   const total = nights * (ratePerNight ?? 0)
@@ -74,7 +77,7 @@ export default function NewReservationPage() {
     if (checkIn && checkOut && checkOut > checkIn) {
       getAvailableRooms(checkIn, checkOut)
         .then(setAvailableRooms)
-        .catch((e) => toast.error(e.message))
+        .catch((e) => toast.error(errorMessage(e)))
     }
   }, [checkIn, checkOut, toast])
 
@@ -82,8 +85,8 @@ export default function NewReservationPage() {
   useEffect(() => {
     if (step === 2) {
       getGuests(guestSearch)
-        .then(setGuests)
-        .catch((e) => toast.error(e.message))
+        .then((page) => setGuests(page.rows))
+        .catch((e) => toast.error(errorMessage(e)))
     }
   }, [step, guestSearch, toast])
 
@@ -94,7 +97,7 @@ export default function NewReservationPage() {
 
   const handleGuestSelect = (guest: Guest) => {
     if (guest.is_banned) {
-      toast.error(`⚠️ ${guest.first_name} ${guest.last_name} is banned: ${guest.ban_reason ?? 'No reason given'}`)
+      toast.error(`⚠️ ${t('guest.bannedWarning', { name: `${guest.first_name} ${guest.last_name}`, reason: guest.ban_reason ?? t('guest.noReason') })}`)
       return
     }
     setSelectedGuest(guest)
@@ -111,7 +114,7 @@ export default function NewReservationPage() {
       setValue('guest_id', guest.id)
       setStep(3)
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     } finally {
       setLoading(false)
     }
@@ -122,10 +125,11 @@ export default function NewReservationPage() {
     setLoading(true)
     try {
       const reservation = await createReservation({ ...data, property_id: property.id })
-      toast.success('Reservation created successfully!')
+      await queryClient.invalidateQueries()
+      toast.success(t('reservation.created'))
       router.push(`/reservations/${reservation.id}`)
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     } finally {
       setLoading(false)
     }
@@ -146,7 +150,7 @@ export default function NewReservationPage() {
         <Link href="/reservations">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('actions.back')}
           </Button>
         </Link>
         <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('reservation.new')}</h1>
@@ -164,27 +168,27 @@ export default function NewReservationPage() {
         ))}
       </div>
       <div className="flex text-xs text-gray-500 justify-between px-1">
-        <span>Dates & Room</span>
-        <span>Guest</span>
-        <span>Confirm</span>
+        <span>{t('reservation.stepDatesRoom')}</span>
+        <span>{t('reservation.guest')}</span>
+        <span>{t('actions.confirm')}</span>
       </div>
 
       {/* Step 1: Dates & Room */}
       {step === 1 && (
         <Card>
-          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Select Dates & Room</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('reservation.selectDatesRoom')}</h2>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <Input
               label={t('reservation.checkIn')}
               type="date"
-              min={todayISO()}
+              min={todayISO(property?.timezone)}
               error={errors.check_in_date?.message}
               {...register('check_in_date')}
             />
             <Input
               label={t('reservation.checkOut')}
               type="date"
-              min={checkIn ?? todayISO()}
+              min={checkIn ?? todayISO(property?.timezone)}
               error={errors.check_out_date?.message}
               {...register('check_out_date')}
             />
@@ -219,7 +223,7 @@ export default function NewReservationPage() {
                 ))}
               </div>
               {availableRooms.length === 0 && (
-                <p className="text-center text-gray-400 py-4">No rooms available for these dates</p>
+                <p className="text-center text-gray-400 py-4">{t('reservation.noRoomsForDates')}</p>
               )}
             </>
           )}
@@ -240,7 +244,7 @@ export default function NewReservationPage() {
       {step === 2 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Select or Add Guest</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('reservation.selectGuest')}</h2>
             <Button
               size="sm"
               variant={newGuestMode ? 'outline' : 'ghost'}
@@ -267,13 +271,13 @@ export default function NewReservationPage() {
               <Input label={t('guest.phone')} type="tel" {...registerGuest('phone')} />
               <Input label={t('guest.email')} type="email" error={guestErrors.email?.message} {...registerGuest('email')} />
               <Button type="submit" loading={loading} className="w-full">
-                Add Guest & Continue
+                {t('actions.addGuestContinue')}
               </Button>
             </form>
           ) : (
             <>
               <Input
-                placeholder="Search by name or phone..."
+                placeholder={t('guest.searchPlaceholder')}
                 value={guestSearch}
                 onChange={(e) => setGuestSearch(e.target.value)}
                 className="mb-3"
@@ -296,7 +300,7 @@ export default function NewReservationPage() {
                       {guest.is_banned && (
                         <div className="flex items-center gap-1 text-error text-xs">
                           <AlertTriangle className="h-3 w-3" />
-                          Banned
+                          {t('guest.bannedBadge')}
                         </div>
                       )}
                     </div>
@@ -321,45 +325,45 @@ export default function NewReservationPage() {
       {step === 3 && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <Card>
-            <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Confirm Reservation</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('reservation.confirmTitle')}</h2>
             <div className="space-y-3 mb-6">
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Guest</span>
+                <span className="text-gray-500">{t('reservation.guest')}</span>
                 <span className="font-medium text-secondary">
                   {selectedGuest?.first_name} {selectedGuest?.last_name}
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Room</span>
+                <span className="text-gray-500">{t('reservation.room')}</span>
                 <span className="font-medium text-secondary">
                   Room {selectedRoom?.number} ({selectedRoom?.room_type})
                 </span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Check In</span>
+                <span className="text-gray-500">{t('reservation.checkIn')}</span>
                 <span className="font-medium text-secondary">{formatDate(checkIn)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Check Out</span>
+                <span className="text-gray-500">{t('reservation.checkOut')}</span>
                 <span className="font-medium text-secondary">{formatDate(checkOut)}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Nights</span>
+                <span className="text-gray-500">{t('reservation.nights')}</span>
                 <span className="font-medium text-secondary">{nights}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span className="text-gray-500">Rate / Night</span>
+                <span className="text-gray-500">{t('reservation.rate')}</span>
                 <span className="font-medium text-secondary">{formatCurrency(ratePerNight ?? 0)}</span>
               </div>
               <div className="flex justify-between text-sm font-semibold border-t border-black/5 pt-3">
-                <span className="text-secondary">Total</span>
+                <span className="text-secondary">{t('reservation.total')}</span>
                 <span className="text-primary text-lg">{formatCurrency(total)}</span>
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-4 mb-4">
               <Input
-                label="Adults"
+                label={t('reservation.adults')}
                 type="number"
                 min={1}
                 max={10}
@@ -367,7 +371,7 @@ export default function NewReservationPage() {
                 {...register('adults', { valueAsNumber: true })}
               />
               <Input
-                label="Children"
+                label={t('reservation.children')}
                 type="number"
                 min={0}
                 max={10}
@@ -390,7 +394,7 @@ export default function NewReservationPage() {
 
             <div className="flex gap-3">
               <Button type="submit" loading={loading} className="flex-1">
-                Confirm Reservation
+                {t('reservation.confirmTitle')}
               </Button>
               <Button type="button" variant="outline" onClick={() => setStep(2)}>
                 {t('actions.back')}

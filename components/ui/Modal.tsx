@@ -2,6 +2,7 @@
 
 import { useEffect, type ReactNode } from 'react'
 import { X } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils/cn'
 
 interface ModalProps {
@@ -20,6 +21,7 @@ const sizeClasses = {
 }
 
 export default function Modal({ open, onClose, title, children, size = 'md' }: ModalProps) {
+  const { t } = useTranslation()
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden'
@@ -62,7 +64,7 @@ export default function Modal({ open, onClose, title, children, size = 'md' }: M
             <button
               onClick={onClose}
               className="grid h-8 w-8 place-items-center rounded-full bg-black/5 text-gray-500 hover:bg-black/10 hover:text-gray-700 transition-colors"
-              aria-label="Close"
+              aria-label={t('actions.close')}
             >
               <X className="h-4 w-4" />
             </button>

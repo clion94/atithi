@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
@@ -9,22 +8,13 @@ import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import Spinner from '@/components/ui/Spinner'
 import { ReservationStatusBadge } from '@/components/ui/Badge'
-import { getDashboardStats } from '@/lib/services/reservations'
+import { useDashboardStats } from '@/hooks/useReports'
+import ErrorState from '@/components/ui/ErrorState'
 import { formatDate } from '@/lib/utils/dates'
-import type { DashboardStats } from '@/types'
 
 export default function DashboardPage() {
   const { t } = useTranslation()
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    getDashboardStats('')
-      .then(setStats)
-      .catch((e: { message: string }) => setError(e.message))
-      .finally(() => setLoading(false))
-  }, [])
+  const { data: stats, isPending: loading, error, refetch } = useDashboardStats()
 
   if (loading) {
     return (
@@ -35,14 +25,10 @@ export default function DashboardPage() {
   }
 
   if (error) {
-    return (
-      <div className="text-center py-12 text-error">
-        <p>{t('common.error')}: {error}</p>
-      </div>
-    )
+    return <ErrorState message={`${t('common.error')}: ${error.message}`} onRetry={() => refetch()} />
   }
 
-  const totalRooms = (stats?.occupied ?? 0) + (stats?.available ?? 0)
+  const totalRooms = stats?.total_rooms ?? 0
   const occupancyRate = totalRooms > 0
     ? Math.round(((stats?.occupied ?? 0) / totalRooms) * 100)
     : 0
@@ -73,7 +59,7 @@ export default function DashboardPage() {
           label={t('dashboard.available')}
           value={stats?.available ?? 0}
           icon="rooms"
-          sub={`of ${totalRooms} total rooms`}
+          sub={t('dashboard.ofSellable', { rooms: totalRooms })}
         />
         <StatCard
           label={t('dashboard.arrivalsToday')}
@@ -107,7 +93,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-medium text-secondary">
                         {r.guest?.first_name} {r.guest?.last_name}
                       </p>
-                      <p className="text-xs text-gray-500">Room {r.room?.number}</p>
+                      <p className="text-xs text-gray-500">{t('reservation.room')} {r.room?.number}</p>
                     </div>
                     <div className="text-right">
                       <ReservationStatusBadge status={r.status} />
@@ -138,7 +124,7 @@ export default function DashboardPage() {
                       <p className="text-sm font-medium text-secondary">
                         {r.guest?.first_name} {r.guest?.last_name}
                       </p>
-                      <p className="text-xs text-gray-500">Room {r.room?.number}</p>
+                      <p className="text-xs text-gray-500">{t('reservation.room')} {r.room?.number}</p>
                     </div>
                     <div className="text-right">
                       <ReservationStatusBadge status={r.status} />
@@ -159,7 +145,7 @@ export default function DashboardPage() {
           <Link href="/reservations/walkin">
             <Button variant="primary">
               <Image src="/filled/checkin.svg" alt="" width={16} height={16} />
-              Walk-in Check-in
+              {t('actions.walkInCheckIn')}
             </Button>
           </Link>
           <Link href="/reservations/new">

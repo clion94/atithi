@@ -1,6 +1,9 @@
 import { createClient } from '@/lib/supabase/client'
-import type { HousekeepingLog, RoomStatus } from '@/types'
+import type { HousekeepingLog } from '@/types'
+import { toError } from '@/lib/utils/errors'
 
+// Read-only: rows are written by a database trigger whenever a room's status or
+// notes change (see migration 003), so the log cannot be forged or skipped.
 export async function getHousekeepingLog(roomId?: string): Promise<HousekeepingLog[]> {
   const supabase = createClient()
   let query = supabase
@@ -9,28 +12,9 @@ export async function getHousekeepingLog(roomId?: string): Promise<HousekeepingL
     .order('created_at', { ascending: false })
     .limit(100)
 
-  if (roomId) {
-    query = query.eq('room_id', roomId)
-  }
+  if (roomId) query = query.eq('room_id', roomId)
 
   const { data, error } = await query
-  if (error) throw error
+  if (error) throw toError(error)
   return data
-}
-
-export async function logStatusChange(
-  roomId: string,
-  propertyId: string,
-  oldStatus: RoomStatus,
-  newStatus: RoomStatus,
-  notes?: string
-): Promise<void> {
-  const supabase = createClient()
-  await supabase.from('housekeeping_log').insert({
-    room_id: roomId,
-    property_id: propertyId,
-    old_status: oldStatus,
-    new_status: newStatus,
-    notes,
-  })
 }

@@ -30,7 +30,9 @@ export async function updateSession(request: NextRequest) {
 
   const pathname = request.nextUrl.pathname
 
-  const publicPaths = ['/login', '/api', '/setup']
+  // Everything else needs a session. (The old /api route handlers were removed:
+  // the app talks to Supabase directly and the database enforces access.)
+  const publicPaths = ['/login']
   const isPublicPath = publicPaths.some((p) => pathname.startsWith(p))
 
   if (!user && !isPublicPath) {

@@ -54,7 +54,7 @@ export default function MobileNav() {
       <button
         onClick={() => setOpen(true)}
         className="md:hidden grid h-11 w-11 place-items-center rounded-full hover:bg-black/5 text-secondary"
-        aria-label="Open menu"
+        aria-label={t('common.openMenu')}
       >
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
           <line x1="3" y1="5" x2="17" y2="5" />
@@ -81,7 +81,7 @@ export default function MobileNav() {
               <button
                 onClick={() => setOpen(false)}
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-white/70 hover:text-white"
-                aria-label="Close menu"
+                aria-label={t('common.closeMenu')}
               >
                 <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
                   <line x1="4" y1="4" x2="16" y2="16" />
