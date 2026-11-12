@@ -11,7 +11,7 @@ URL="${PGURL%/*}/$DB"
 
 psql "$PGURL" -v ON_ERROR_STOP=1 -q -c "drop database if exists $DB" -c "create database $DB"
 
-for f in tests/00_supabase_stub.sql migrations/*.sql tests/rls_and_rules.sql; do
+for f in tests/00_supabase_stub.sql migrations/*.sql tests/01_helpers.sql tests/rls_and_rules.sql tests/team_audit_documents.sql; do
   echo "== $f"
   psql "$URL" -v ON_ERROR_STOP=1 -q -f "$f"
 done
