@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
+import Logo from '@/components/Logo'
 import { useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
@@ -75,12 +75,7 @@ export default function SetupPage() {
       <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-float ring-1 ring-white/20 overflow-hidden animate-pop-in">
         {/* Header */}
         <div className="bg-secondary px-8 py-6 flex items-center gap-4">
-          <Image
-            src="/logos/atithi-logo-128x128.png"
-            alt="Atithi"
-            width={48}
-            height={48}
-          />
+          <Logo size={48} showName={false} />
           <div>
             <h1 className="font-display text-2xl font-bold text-white">{t('setup.welcome')}</h1>
             <p className="text-sm text-white/60">{t('setup.subtitle')}</p>
@@ -175,9 +170,6 @@ export default function SetupPage() {
         </form>
       </div>
 
-      <p className="text-center text-xs text-white/30 mt-6">
-        अतिथि देवो भव · The guest is god.
-      </p>
     </div>
   )
 }

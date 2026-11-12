@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "Atithi",
-    "tagline": "The guest is everything."
+    "name": "Waypoint",
+    "tagline": "Run your motel with ease"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -250,7 +250,7 @@
     "checkingInToday": "Checking in today · {{date}}"
   },
   "setup": {
-    "welcome": "Welcome to Atithi",
+    "welcome": "Welcome to Waypoint",
     "subtitle": "Let's set up your property",
     "aboutYou": "About you",
     "yourName": "Your name",

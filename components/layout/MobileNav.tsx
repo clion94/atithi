@@ -1,12 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils/cn'
 import { createClient } from '@/lib/supabase/client'
+import Logo from '@/components/Logo'
 
 type NavItem = {
   key: string
@@ -63,21 +65,17 @@ export default function MobileNav() {
         </svg>
       </button>
 
-      {open && (
+      {/* Portal to <body>: the header uses backdrop-filter, which makes it the containing
+          block for fixed-position children and would squash the drawer to the header's height. */}
+      {open && createPortal(
         <>
           <div
             className="fixed inset-0 bg-black/30 backdrop-blur-sm animate-fade-in z-40 md:hidden"
             onClick={() => setOpen(false)}
           />
-          <div className="fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-secondary to-[#16233e] shadow-float z-50 md:hidden flex flex-col animate-slide-in">
+          <div className="fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-secondary to-[#14122b] shadow-float z-50 md:hidden flex flex-col animate-slide-in">
             <div className="flex items-center justify-between px-6 py-5 border-b border-white/8">
-              <Image
-                src="/logos/atithi-logo-128x128.png"
-                alt={t('app.name')}
-                width={44}
-                height={44}
-                priority
-              />
+              <Logo size={40} onDark />
               <button
                 onClick={() => setOpen(false)}
                 className="grid h-9 w-9 place-items-center rounded-full bg-white/10 text-white/70 hover:text-white"
@@ -130,7 +128,8 @@ export default function MobileNav() {
               </button>
             </div>
           </div>
-        </>
+        </>,
+        document.body
       )}
     </>
   )

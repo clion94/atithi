@@ -6,7 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 PGURL="${PGURL:-postgresql://postgres@localhost:5432/postgres}"
-DB=atithi_test
+DB=waypoint_test
 URL="${PGURL%/*}/$DB"
 
 psql "$PGURL" -v ON_ERROR_STOP=1 -q -c "drop database if exists $DB" -c "create database $DB"
