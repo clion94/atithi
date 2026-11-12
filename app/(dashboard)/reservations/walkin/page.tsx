@@ -27,7 +27,7 @@ import type { Room, Guest } from '@/types'
 type Step = 1 | 2 | 3
 
 // Step 3 only needs adults / children / special_requests from RHF
-type Step3Fields = { adults: number; children: number; special_requests?: string }
+type Step3Fields = { adults: number; children: number; special_requests?: string; vehicle_plate?: string }
 
 export default function WalkInPage() {
   const { t } = useTranslation()
@@ -125,6 +125,7 @@ export default function WalkInPage() {
         children: getValues('children') ?? 0,
         source: 'walk_in',
         special_requests: getValues('special_requests') || undefined,
+        vehicle_plate: getValues('vehicle_plate') || undefined,
       })
       await queryClient.invalidateQueries()
       toast.success(t('reservation.checkedInTo', { name: selectedGuest.first_name, room: selectedRoom.number }))
@@ -343,6 +344,14 @@ export default function WalkInPage() {
               {...register('children', { valueAsNumber: true })}
             />
           </div>
+
+          <Input
+            label={t('reservation.vehiclePlate')}
+            className="mb-4 uppercase"
+            maxLength={20}
+            autoComplete="off"
+            {...register('vehicle_plate')}
+          />
 
           <Textarea label={t('reservation.specialRequests')} className="mb-6" rows={2}
               {...register('special_requests')}

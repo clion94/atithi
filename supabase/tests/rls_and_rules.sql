@@ -1,21 +1,5 @@
 -- Adversarial tests for RLS, roles and reservation rules (migration 003).
 -- Run with supabase/tests/run.sh. Any failure raises an error and exits non-zero.
-create schema t; grant usage on schema t to authenticated, anon;
-create function t.fails(p_sql text, p_expect text) returns void language plpgsql as $$
-begin
-  begin execute p_sql; exception when others then
-    if sqlerrm ilike '%'||p_expect||'%' then raise notice 'PASS (blocked): %', p_expect; return; end if;
-    raise exception 'WRONG ERROR for [%]: got [%], expected [%]', p_sql, sqlerrm, p_expect;
-  end;
-  raise exception 'NOT BLOCKED: %', p_sql;
-end $$;
-create function t.eq(p_what text, p_actual anyelement, p_expected anyelement) returns void language plpgsql as $$
-begin
-  if p_actual is distinct from p_expected then raise exception 'FAIL %: got %, expected %', p_what, p_actual, p_expected; end if;
-  raise notice 'PASS: %', p_what;
-end $$;
-grant execute on all functions in schema t to authenticated, anon;
-
 insert into auth.users values ('aaaaaaaa-0000-0000-0000-000000000001','owner1@x'),('bbbbbbbb-0000-0000-0000-000000000002','staff1@x'),('cccccccc-0000-0000-0000-000000000003','owner2@x');
 set role authenticated;
 select set_config('request.jwt.claim.sub','aaaaaaaa-0000-0000-0000-000000000001',false);

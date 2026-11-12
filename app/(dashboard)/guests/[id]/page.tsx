@@ -17,6 +17,7 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
 import Modal from '@/components/ui/Modal'
+import IdDocuments from '@/components/guests/IdDocuments'
 import Spinner from '@/components/ui/Spinner'
 import { useToast } from '@/components/ui/Toast'
 import { useAppStore } from '@/store/useAppStore'
@@ -259,6 +260,9 @@ export default function GuestProfilePage() {
           </dl>
         )}
       </Card>
+
+      {/* ID photos (private storage) */}
+      <IdDocuments guest={guest} canDelete={canBan} />
 
       {/* Stay History */}
       <Card>

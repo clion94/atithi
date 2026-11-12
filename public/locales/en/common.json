@@ -10,7 +10,9 @@
     "guests": "Guests",
     "housekeeping": "Housekeeping",
     "reports": "Reports",
-    "settings": "Settings"
+    "settings": "Settings",
+    "calendar": "Calendar",
+    "team": "Team"
   },
   "reservation": {
     "new": "New Reservation",
@@ -64,7 +66,9 @@
     "selectDatesRoom": "Select dates & room",
     "noRoomsForDates": "No rooms available for these dates",
     "selectGuest": "Select or add guest",
-    "confirmTitle": "Confirm reservation"
+    "confirmTitle": "Confirm reservation",
+    "vehiclePlate": "Vehicle plate",
+    "plateSaved": "Plate saved"
   },
   "room": {
     "number": "Room Number",
@@ -203,7 +207,16 @@
     "forgotPassword": "Forgot password?",
     "signingIn": "Signing in...",
     "welcomeBack": "Welcome back",
-    "signInToContinue": "Sign in to manage your property"
+    "signInToContinue": "Sign in to manage your property",
+    "changePassword": "Change password",
+    "changePasswordHint": "Choose a password only you know. You'll use it every time you sign in.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordTooShort": "Use at least 8 characters.",
+    "passwordsDontMatch": "The passwords don't match.",
+    "passwordChanged": "Password changed",
+    "deactivatedTitle": "Account deactivated",
+    "deactivatedBody": "Your account has been deactivated, so you can't use the app. Ask the owner or manager if this is a mistake."
   },
   "settings": {
     "propertyInfo": "Property Information",
@@ -221,7 +234,11 @@
     "fullName": "Full Name",
     "role": "Role",
     "propertySaved": "Property settings saved",
-    "profileSaved": "Profile saved"
+    "profileSaved": "Profile saved",
+    "taxRate": "Tax rate (%)",
+    "taxRateHint": "Added to invoices (for example your occupancy tax). Use 0 for none.",
+    "taxRateInvalid": "Enter a number from 0 to 100.",
+    "managersOnly": "Only owners and managers can change property settings."
   },
   "dashboard": {
     "occupied": "Occupied",
@@ -262,5 +279,119 @@
     "create": "Create my property",
     "creating": "Setting up…",
     "footer": "You can update all of this later in Settings"
+  },
+  "calendar": {
+    "title": "Room calendar",
+    "previous": "Previous week",
+    "next": "Next week",
+    "overdue": "Overdue check-out",
+    "occupied": "{{count}} rooms occupied",
+    "bookRoom": "Book room {{room}} from {{date}}"
+  },
+  "team": {
+    "title": "Team",
+    "add": "Add team member",
+    "noAccess": "Only owners and managers can manage the team.",
+    "notConfigured": "Adding and managing logins needs a server key that isn't set up yet. Ask whoever hosts this app to set SUPABASE_SERVICE_ROLE_KEY (see the README).",
+    "you": "(you)",
+    "inactive": "Deactivated",
+    "changeRole": "Change role",
+    "resetPassword": "Reset password",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "activity": "Recent activity",
+    "noActivity": "Nothing yet. Check-ins, bookings and changes will appear here.",
+    "fullName": "Full name",
+    "addHint": "We create their login and show you a one-time password. They must choose their own password the first time they sign in.",
+    "createLogin": "Create login",
+    "credentialsTitle": "Login created",
+    "credentialsIntro": "Give these sign-in details to {{name}}.",
+    "credentialsNote": "This password is shown only once and is not stored anywhere. If it's lost, reset the password to get a new one.",
+    "copy": "Copy password",
+    "copied": "Password copied",
+    "copyFailed": "Couldn't copy. Select the password and copy it by hand.",
+    "deactivateConfirm": "{{name}} will be signed out and won't be able to use the app. Their history stays. You can reactivate them any time.",
+    "deactivated": "Account deactivated",
+    "reactivated": "Account reactivated",
+    "roleChanged": "Role updated",
+    "roles": {
+      "owner": "Owner",
+      "manager": "Manager",
+      "staff": "Staff"
+    },
+    "errors": {
+      "unauthorized": "Please sign in again.",
+      "forbidden": "You don't have permission to do that.",
+      "self": "You can't do that to your own account.",
+      "role_not_allowed": "You can't give that role.",
+      "invalid": "Please check the details and try again.",
+      "email_taken": "That email already has an account.",
+      "not_configured": "The server key for managing logins isn't set up yet.",
+      "last_owner": "A property must keep at least one active owner.",
+      "not_found": "That team member wasn't found.",
+      "failed": "Something went wrong. Please try again."
+    }
+  },
+  "activity": {
+    "system": "System",
+    "unknown": "{{actor}}: {{action}}",
+    "reservation_created": "{{actor}} created a booking for {{guest}} (room {{room}})",
+    "checked_in": "{{actor}} checked in {{guest}} to room {{room}}",
+    "checked_out": "{{actor}} checked out {{guest}} from room {{room}}",
+    "cancelled": "{{actor}} cancelled the booking for {{guest}} (room {{room}})",
+    "no_show": "{{actor}} marked {{guest}} as a no-show (room {{room}})",
+    "guest_banned": "{{actor}} banned {{guest}}: {{reason}}",
+    "guest_unbanned": "{{actor}} removed the ban on {{guest}}",
+    "room_rate_changed": "{{actor}} changed room {{room}} rate from {{from}} to {{to}}",
+    "id_document_added": "{{actor}} added an ID photo for {{guest}}",
+    "id_document_removed": "{{actor}} removed an ID photo for {{guest}}",
+    "staff_added": "{{actor}} added {{name}} to the team as {{role}}",
+    "staff_role_changed": "{{actor}} changed {{name}} from {{from}} to {{to}}",
+    "staff_deactivated": "{{actor}} deactivated {{name}}",
+    "staff_reactivated": "{{actor}} reactivated {{name}}",
+    "staff_password_reset": "{{actor}} reset {{name}}'s password"
+  },
+  "documents": {
+    "registrationCard": "Registration card",
+    "invoice": "Invoice",
+    "estimate": "Estimate",
+    "print": "Print",
+    "guestDetails": "Guest details",
+    "fullName": "Full name",
+    "cityStateZip": "City, state, ZIP",
+    "stayDetails": "Stay details",
+    "registrationTerms": "By signing, the guest confirms the details above are correct and agrees to the rate and rules of this property.",
+    "checkOutTime": "Check-out time is {{time}}.",
+    "guestSignature": "Guest signature",
+    "date": "Date",
+    "staffInitials": "Staff initials",
+    "noInvoice": "A cancelled or no-show booking has nothing to invoice.",
+    "billTo": "Bill to",
+    "stay": "Stay",
+    "description": "Description",
+    "qty": "Qty",
+    "amount": "Amount",
+    "roomCharge": "Room {{room}} {{type}}",
+    "subtotal": "Subtotal",
+    "tax": "Tax ({{rate}}%)",
+    "estimateNote": "This is an estimate for a booking that has not checked in yet.",
+    "thanks": "Thank you for staying at {{name}}.",
+    "idPhotos": "ID photos",
+    "idPhotosPrivacy": "Stored privately. Only your team can see them, and only owners and managers can delete them.",
+    "photoType": "Photo type",
+    "addPhoto": "Add photo",
+    "noPhotos": "No ID photos yet.",
+    "photoAlt": "ID photo ({{kind}})",
+    "unavailable": "Unavailable",
+    "removePhoto": "Remove photo",
+    "removeConfirm": "This permanently deletes the photo.",
+    "photoSaved": "Photo saved",
+    "photoRemoved": "Photo removed",
+    "notAnImage": "Please choose an image file.",
+    "kinds": {
+      "id_front": "ID front",
+      "id_back": "ID back",
+      "other": "Other"
+    }
   }
 }

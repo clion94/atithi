@@ -10,7 +10,9 @@
     "guests": "मेहमान",
     "housekeeping": "हाउसकीपिंग",
     "reports": "रिपोर्ट",
-    "settings": "सेटिंग्स"
+    "settings": "सेटिंग्स",
+    "calendar": "कैलेंडर",
+    "team": "टीम"
   },
   "reservation": {
     "new": "नई बुकिंग",
@@ -64,7 +66,9 @@
     "selectDatesRoom": "तारीखें और कमरा चुनें",
     "noRoomsForDates": "इन तारीखों के लिए कोई कमरा उपलब्ध नहीं",
     "selectGuest": "मेहमान चुनें या जोड़ें",
-    "confirmTitle": "बुकिंग की पुष्टि करें"
+    "confirmTitle": "बुकिंग की पुष्टि करें",
+    "vehiclePlate": "वाहन नंबर प्लेट",
+    "plateSaved": "नंबर प्लेट सहेजी गई"
   },
   "room": {
     "number": "कमरा नंबर",
@@ -170,7 +174,11 @@
     "fullName": "पूरा नाम",
     "role": "भूमिका",
     "propertySaved": "प्रॉपर्टी सेटिंग्स सहेजी गईं",
-    "profileSaved": "प्रोफ़ाइल सहेजी गई"
+    "profileSaved": "प्रोफ़ाइल सहेजी गई",
+    "taxRate": "कर दर (%)",
+    "taxRateHint": "इनवॉइस में जोड़ा जाता है (जैसे आपका ऑक्यूपेंसी टैक्स)। न हो तो 0 रखें।",
+    "taxRateInvalid": "0 से 100 के बीच संख्या दें।",
+    "managersOnly": "केवल मालिक और मैनेजर प्रॉपर्टी सेटिंग्स बदल सकते हैं।"
   },
   "actions": {
     "save": "सहेजें",
@@ -221,7 +229,16 @@
     "forgotPassword": "पासवर्ड भूल गए?",
     "signingIn": "साइन इन हो रहा है...",
     "welcomeBack": "स्वागत है",
-    "signInToContinue": "अपनी प्रॉपर्टी प्रबंधित करने के लिए साइन इन करें"
+    "signInToContinue": "अपनी प्रॉपर्टी प्रबंधित करने के लिए साइन इन करें",
+    "changePassword": "पासवर्ड बदलें",
+    "changePasswordHint": "ऐसा पासवर्ड चुनें जो सिर्फ आप जानते हों। हर बार साइन इन करने पर इसका उपयोग होगा।",
+    "newPassword": "नया पासवर्ड",
+    "confirmPassword": "पासवर्ड की पुष्टि करें",
+    "passwordTooShort": "कम से कम 8 अक्षर रखें।",
+    "passwordsDontMatch": "पासवर्ड मेल नहीं खाते।",
+    "passwordChanged": "पासवर्ड बदल गया",
+    "deactivatedTitle": "खाता निष्क्रिय है",
+    "deactivatedBody": "आपका खाता निष्क्रिय कर दिया गया है, इसलिए आप ऐप का उपयोग नहीं कर सकते। गलती लगे तो मालिक या मैनेजर से पूछें।"
   },
   "dashboard": {
     "occupied": "व्यस्त",
@@ -262,5 +279,119 @@
     "create": "मेरी प्रॉपर्टी बनाएं",
     "creating": "सेट हो रहा है…",
     "footer": "आप यह सब बाद में सेटिंग्स में बदल सकते हैं"
+  },
+  "calendar": {
+    "title": "कमरा कैलेंडर",
+    "previous": "पिछला सप्ताह",
+    "next": "अगला सप्ताह",
+    "overdue": "चेक आउट में देरी",
+    "occupied": "{{count}} कमरे भरे हुए",
+    "bookRoom": "कमरा {{room}} {{date}} से बुक करें"
+  },
+  "team": {
+    "title": "टीम",
+    "add": "टीम सदस्य जोड़ें",
+    "noAccess": "केवल मालिक और मैनेजर टीम को प्रबंधित कर सकते हैं।",
+    "notConfigured": "लॉगिन जोड़ने और प्रबंधित करने के लिए एक सर्वर कुंजी चाहिए जो अभी सेट नहीं है। इस ऐप को होस्ट करने वाले से SUPABASE_SERVICE_ROLE_KEY सेट करने को कहें (README देखें)।",
+    "you": "(आप)",
+    "inactive": "निष्क्रिय",
+    "changeRole": "भूमिका बदलें",
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "deactivate": "निष्क्रिय करें",
+    "reactivate": "फिर सक्रिय करें",
+    "activity": "हाल की गतिविधि",
+    "noActivity": "अभी कुछ नहीं। चेक इन, बुकिंग और बदलाव यहाँ दिखेंगे।",
+    "fullName": "पूरा नाम",
+    "addHint": "हम उनका लॉगिन बनाते हैं और आपको एक बार का पासवर्ड दिखाते हैं। पहली बार साइन इन करते समय उन्हें अपना पासवर्ड चुनना होगा।",
+    "createLogin": "लॉगिन बनाएं",
+    "credentialsTitle": "लॉगिन बन गया",
+    "credentialsIntro": "ये साइन-इन विवरण {{name}} को दें।",
+    "credentialsNote": "यह पासवर्ड सिर्फ एक बार दिखता है और कहीं सहेजा नहीं जाता। खो जाए तो पासवर्ड रीसेट करके नया लें।",
+    "copy": "पासवर्ड कॉपी करें",
+    "copied": "पासवर्ड कॉपी हुआ",
+    "copyFailed": "कॉपी नहीं हो सका। पासवर्ड चुनकर हाथ से कॉपी करें।",
+    "deactivateConfirm": "{{name}} साइन आउट हो जाएंगे और ऐप का उपयोग नहीं कर पाएंगे। उनका इतिहास बना रहेगा। आप कभी भी उन्हें फिर सक्रिय कर सकते हैं।",
+    "deactivated": "खाता निष्क्रिय किया गया",
+    "reactivated": "खाता फिर सक्रिय किया गया",
+    "roleChanged": "भूमिका अपडेट हुई",
+    "roles": {
+      "owner": "मालिक",
+      "manager": "मैनेजर",
+      "staff": "स्टाफ"
+    },
+    "errors": {
+      "unauthorized": "कृपया फिर से साइन इन करें।",
+      "forbidden": "आपको ऐसा करने की अनुमति नहीं है।",
+      "self": "आप अपने ही खाते के साथ ऐसा नहीं कर सकते।",
+      "role_not_allowed": "आप यह भूमिका नहीं दे सकते।",
+      "invalid": "कृपया विवरण जांचकर फिर कोशिश करें।",
+      "email_taken": "इस ईमेल का खाता पहले से है।",
+      "not_configured": "लॉगिन प्रबंधित करने की सर्वर कुंजी अभी सेट नहीं है।",
+      "last_owner": "प्रॉपर्टी में कम से कम एक सक्रिय मालिक होना चाहिए।",
+      "not_found": "वह टीम सदस्य नहीं मिला।",
+      "failed": "कुछ गलत हुआ। कृपया फिर कोशिश करें।"
+    }
+  },
+  "activity": {
+    "system": "सिस्टम",
+    "unknown": "{{actor}}: {{action}}",
+    "reservation_created": "{{actor}} ने {{guest}} की बुकिंग बनाई (कमरा {{room}})",
+    "checked_in": "{{actor}} ने {{guest}} को कमरा {{room}} में चेक इन किया",
+    "checked_out": "{{actor}} ने {{guest}} को कमरा {{room}} से चेक आउट किया",
+    "cancelled": "{{actor}} ने {{guest}} की बुकिंग रद्द की (कमरा {{room}})",
+    "no_show": "{{actor}} ने {{guest}} को \"नहीं आए\" दर्ज किया (कमरा {{room}})",
+    "guest_banned": "{{actor}} ने {{guest}} पर प्रतिबंध लगाया: {{reason}}",
+    "guest_unbanned": "{{actor}} ने {{guest}} से प्रतिबंध हटाया",
+    "room_rate_changed": "{{actor}} ने कमरा {{room}} का दर {{from}} से {{to}} किया",
+    "id_document_added": "{{actor}} ने {{guest}} की ID फ़ोटो जोड़ी",
+    "id_document_removed": "{{actor}} ने {{guest}} की ID फ़ोटो हटाई",
+    "staff_added": "{{actor}} ने {{name}} को {{role}} के रूप में टीम में जोड़ा",
+    "staff_role_changed": "{{actor}} ने {{name}} को {{from}} से {{to}} किया",
+    "staff_deactivated": "{{actor}} ने {{name}} को निष्क्रिय किया",
+    "staff_reactivated": "{{actor}} ने {{name}} को फिर सक्रिय किया",
+    "staff_password_reset": "{{actor}} ने {{name}} का पासवर्ड रीसेट किया"
+  },
+  "documents": {
+    "registrationCard": "पंजीकरण कार्ड",
+    "invoice": "इनवॉइस",
+    "estimate": "अनुमान",
+    "print": "प्रिंट करें",
+    "guestDetails": "मेहमान का विवरण",
+    "fullName": "पूरा नाम",
+    "cityStateZip": "शहर, राज्य, ZIP",
+    "stayDetails": "ठहरने का विवरण",
+    "registrationTerms": "हस्ताक्षर करके मेहमान पुष्टि करता है कि ऊपर का विवरण सही है और इस प्रॉपर्टी की दर और नियमों से सहमत है।",
+    "checkOutTime": "चेक आउट का समय {{time}} है।",
+    "guestSignature": "मेहमान के हस्ताक्षर",
+    "date": "तारीख",
+    "staffInitials": "स्टाफ के आद्याक्षर",
+    "noInvoice": "रद्द या \"नहीं आए\" बुकिंग का इनवॉइस नहीं बनता।",
+    "billTo": "बिल प्राप्तकर्ता",
+    "stay": "ठहराव",
+    "description": "विवरण",
+    "qty": "मात्रा",
+    "amount": "राशि",
+    "roomCharge": "कमरा {{room}} {{type}}",
+    "subtotal": "उप-योग",
+    "tax": "कर ({{rate}}%)",
+    "estimateNote": "यह उस बुकिंग का अनुमान है जिसमें अभी चेक इन नहीं हुआ।",
+    "thanks": "{{name}} में ठहरने के लिए धन्यवाद।",
+    "idPhotos": "ID फ़ोटो",
+    "idPhotosPrivacy": "निजी तौर पर सहेजी जाती हैं। केवल आपकी टीम देख सकती है, और केवल मालिक व मैनेजर हटा सकते हैं।",
+    "photoType": "फ़ोटो का प्रकार",
+    "addPhoto": "फ़ोटो जोड़ें",
+    "noPhotos": "अभी कोई ID फ़ोटो नहीं।",
+    "photoAlt": "ID फ़ोटो ({{kind}})",
+    "unavailable": "उपलब्ध नहीं",
+    "removePhoto": "फ़ोटो हटाएं",
+    "removeConfirm": "यह फ़ोटो को हमेशा के लिए हटा देगा।",
+    "photoSaved": "फ़ोटो सहेजी गई",
+    "photoRemoved": "फ़ोटो हटाई गई",
+    "notAnImage": "कृपया एक छवि फ़ाइल चुनें।",
+    "kinds": {
+      "id_front": "ID आगे",
+      "id_back": "ID पीछे",
+      "other": "अन्य"
+    }
   }
 }

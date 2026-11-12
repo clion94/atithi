@@ -18,6 +18,8 @@ export interface Property {
   timezone: string
   check_in_time: string
   check_out_time: string
+  /** Occupancy/sales tax percentage applied on invoices (0-100). */
+  tax_rate: number
   created_at: string
   updated_at: string
 }
@@ -26,7 +28,10 @@ export interface Profile {
   id: string
   property_id: string
   full_name?: string
+  email?: string
   role: UserRole
+  /** Deactivated accounts keep their history but have no access. */
+  active: boolean
   language: Language
   created_at: string
   updated_at: string
@@ -81,6 +86,7 @@ export interface Reservation {
   children: number
   source: ReservationSource
   special_requests?: string
+  vehicle_plate?: string
   notes?: string
   created_at: string
   updated_at: string
@@ -119,4 +125,26 @@ export interface DashboardStats {
   checkouts_today: number
   arrivals: Reservation[]
   departures: Reservation[]
+}
+
+export interface ActivityLogEntry {
+  id: string
+  property_id: string
+  actor_id: string | null
+  action: string
+  entity_type: string
+  entity_id: string | null
+  summary: Record<string, unknown>
+  created_at: string
+  actor?: { full_name: string | null; email: string | null } | null
+}
+
+export interface GuestDocument {
+  id: string
+  property_id: string
+  guest_id: string
+  storage_path: string
+  kind: 'id_front' | 'id_back' | 'other'
+  uploaded_by: string | null
+  created_at: string
 }

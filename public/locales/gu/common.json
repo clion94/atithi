@@ -10,7 +10,9 @@
     "guests": "મહેમાન",
     "housekeeping": "હાઉસકીપિંગ",
     "reports": "રિપોર્ટ",
-    "settings": "સેટિંગ્સ"
+    "settings": "સેટિંગ્સ",
+    "calendar": "કેલેન્ડર",
+    "team": "ટીમ"
   },
   "reservation": {
     "new": "નવું બુકિંગ",
@@ -64,7 +66,9 @@
     "selectDatesRoom": "તારીખો અને રૂમ પસંદ કરો",
     "noRoomsForDates": "આ તારીખો માટે કોઈ રૂમ ઉપલબ્ધ નથી",
     "selectGuest": "મહેમાન પસંદ કરો અથવા ઉમેરો",
-    "confirmTitle": "બુકિંગની પુષ્ટિ કરો"
+    "confirmTitle": "બુકિંગની પુષ્ટિ કરો",
+    "vehiclePlate": "વાહન નંબર પ્લેટ",
+    "plateSaved": "નંબર પ્લેટ સાચવાઈ"
   },
   "room": {
     "number": "રૂમ નંબર",
@@ -170,7 +174,11 @@
     "fullName": "પૂરું નામ",
     "role": "ભૂમિકા",
     "propertySaved": "પ્રોપર્ટી સેટિંગ્સ સાચવાઈ",
-    "profileSaved": "પ્રોફાઇલ સાચવાઈ"
+    "profileSaved": "પ્રોફાઇલ સાચવાઈ",
+    "taxRate": "કર દર (%)",
+    "taxRateHint": "ઇન્વૉઇસમાં ઉમેરાય છે (દા.ત. તમારો ઓક્યુપન્સી ટેક્સ). ન હોય તો 0 રાખો.",
+    "taxRateInvalid": "0 થી 100 વચ્ચેનો નંબર લખો.",
+    "managersOnly": "ફક્ત માલિક અને મેનેજર પ્રોપર્ટી સેટિંગ્સ બદલી શકે છે."
   },
   "actions": {
     "save": "સાચવો",
@@ -221,7 +229,16 @@
     "forgotPassword": "પાસવર્ડ ભૂલી ગયા?",
     "signingIn": "સાઇન ઇન થઈ રહ્યું છે...",
     "welcomeBack": "ફરી સ્વાગત છે",
-    "signInToContinue": "તમારી પ્રોપર્ટીનું સંચાલન કરવા સાઇન ઇન કરો"
+    "signInToContinue": "તમારી પ્રોપર્ટીનું સંચાલન કરવા સાઇન ઇન કરો",
+    "changePassword": "પાસવર્ડ બદલો",
+    "changePasswordHint": "એવો પાસવર્ડ પસંદ કરો જે ફક્ત તમે જાણો. દર વખતે સાઇન ઇન કરતી વખતે તે વાપરશો.",
+    "newPassword": "નવો પાસવર્ડ",
+    "confirmPassword": "પાસવર્ડની પુષ્ટિ કરો",
+    "passwordTooShort": "ઓછામાં ઓછા 8 અક્ષર રાખો.",
+    "passwordsDontMatch": "પાસવર્ડ મેળ ખાતા નથી.",
+    "passwordChanged": "પાસવર્ડ બદલાઈ ગયો",
+    "deactivatedTitle": "એકાઉન્ટ નિષ્ક્રિય છે",
+    "deactivatedBody": "તમારું એકાઉન્ટ નિષ્ક્રિય કરાયું છે, તેથી તમે એપ વાપરી શકતા નથી. ભૂલ લાગે તો માલિક અથવા મેનેજરને પૂછો."
   },
   "dashboard": {
     "occupied": "ભરેલા",
@@ -262,5 +279,119 @@
     "create": "મારી પ્રોપર્ટી બનાવો",
     "creating": "સેટ થઈ રહ્યું છે…",
     "footer": "તમે આ બધું પછી સેટિંગ્સમાં બદલી શકો છો"
+  },
+  "calendar": {
+    "title": "રૂમ કેલેન્ડર",
+    "previous": "પાછલું અઠવાડિયું",
+    "next": "આગલું અઠવાડિયું",
+    "overdue": "ચેક-આઉટમાં વિલંબ",
+    "occupied": "{{count}} રૂમ ભરેલા",
+    "bookRoom": "રૂમ {{room}} {{date}} થી બુક કરો"
+  },
+  "team": {
+    "title": "ટીમ",
+    "add": "ટીમ સભ્ય ઉમેરો",
+    "noAccess": "ફક્ત માલિક અને મેનેજર ટીમનું સંચાલન કરી શકે છે.",
+    "notConfigured": "લોગિન ઉમેરવા અને મેનેજ કરવા માટે સર્વર કી જોઈએ જે હજી સેટ નથી. આ એપ હોસ્ટ કરનારને SUPABASE_SERVICE_ROLE_KEY સેટ કરવા કહો (README જુઓ).",
+    "you": "(તમે)",
+    "inactive": "નિષ્ક્રિય",
+    "changeRole": "ભૂમિકા બદલો",
+    "resetPassword": "પાસવર્ડ રીસેટ કરો",
+    "deactivate": "નિષ્ક્રિય કરો",
+    "reactivate": "ફરી સક્રિય કરો",
+    "activity": "તાજેતરની પ્રવૃત્તિ",
+    "noActivity": "હજી કંઈ નથી. ચેક-ઇન, બુકિંગ અને ફેરફારો અહીં દેખાશે.",
+    "fullName": "પૂરું નામ",
+    "addHint": "અમે તેમનું લોગિન બનાવીએ છીએ અને તમને એક-વારનો પાસવર્ડ બતાવીએ છીએ. પહેલી વાર સાઇન ઇન કરતી વખતે તેમણે પોતાનો પાસવર્ડ પસંદ કરવો પડશે.",
+    "createLogin": "લોગિન બનાવો",
+    "credentialsTitle": "લોગિન બની ગયું",
+    "credentialsIntro": "આ સાઇન-ઇન વિગતો {{name}} ને આપો.",
+    "credentialsNote": "આ પાસવર્ડ ફક્ત એક જ વાર દેખાય છે અને ક્યાંય સાચવાતો નથી. ખોવાઈ જાય તો પાસવર્ડ રીસેટ કરીને નવો મેળવો.",
+    "copy": "પાસવર્ડ કૉપી કરો",
+    "copied": "પાસવર્ડ કૉપી થયો",
+    "copyFailed": "કૉપી ન થઈ શક્યું. પાસવર્ડ પસંદ કરીને જાતે કૉપી કરો.",
+    "deactivateConfirm": "{{name}} સાઇન આઉટ થઈ જશે અને એપ વાપરી શકશે નહીં. તેમનો ઇતિહાસ રહેશે. તમે ગમે ત્યારે તેમને ફરી સક્રિય કરી શકો છો.",
+    "deactivated": "એકાઉન્ટ નિષ્ક્રિય કર્યું",
+    "reactivated": "એકાઉન્ટ ફરી સક્રિય કર્યું",
+    "roleChanged": "ભૂમિકા અપડેટ થઈ",
+    "roles": {
+      "owner": "માલિક",
+      "manager": "મેનેજર",
+      "staff": "સ્ટાફ"
+    },
+    "errors": {
+      "unauthorized": "કૃપા કરીને ફરી સાઇન ઇન કરો.",
+      "forbidden": "તમને તે કરવાની પરવાનગી નથી.",
+      "self": "તમે તમારા પોતાના એકાઉન્ટ સાથે તે કરી શકતા નથી.",
+      "role_not_allowed": "તમે તે ભૂમિકા આપી શકતા નથી.",
+      "invalid": "કૃપા કરીને વિગતો તપાસીને ફરી પ્રયાસ કરો.",
+      "email_taken": "આ ઈમેલનું એકાઉન્ટ પહેલેથી છે.",
+      "not_configured": "લોગિન મેનેજ કરવા માટેની સર્વર કી હજી સેટ નથી.",
+      "last_owner": "પ્રોપર્ટીમાં ઓછામાં ઓછા એક સક્રિય માલિક હોવા જોઈએ.",
+      "not_found": "તે ટીમ સભ્ય મળ્યા નથી.",
+      "failed": "કંઈક ખોટું થયું. કૃપા કરીને ફરી પ્રયાસ કરો."
+    }
+  },
+  "activity": {
+    "system": "સિસ્ટમ",
+    "unknown": "{{actor}}: {{action}}",
+    "reservation_created": "{{actor}} એ {{guest}} માટે બુકિંગ બનાવ્યું (રૂમ {{room}})",
+    "checked_in": "{{actor}} એ {{guest}} ને રૂમ {{room}} માં ચેક-ઇન કર્યા",
+    "checked_out": "{{actor}} એ {{guest}} ને રૂમ {{room}} માંથી ચેક-આઉટ કર્યા",
+    "cancelled": "{{actor}} એ {{guest}} નું બુકિંગ રદ કર્યું (રૂમ {{room}})",
+    "no_show": "{{actor}} એ {{guest}} ને \"આવ્યા નહીં\" નોંધ્યા (રૂમ {{room}})",
+    "guest_banned": "{{actor}} એ {{guest}} પર પ્રતિબંધ મૂક્યો: {{reason}}",
+    "guest_unbanned": "{{actor}} એ {{guest}} પરથી પ્રતિબંધ હટાવ્યો",
+    "room_rate_changed": "{{actor}} એ રૂમ {{room}} નો દર {{from}} થી {{to}} કર્યો",
+    "id_document_added": "{{actor}} એ {{guest}} નો ID ફોટો ઉમેર્યો",
+    "id_document_removed": "{{actor}} એ {{guest}} નો ID ફોટો હટાવ્યો",
+    "staff_added": "{{actor}} એ {{name}} ને {{role}} તરીકે ટીમમાં ઉમેર્યા",
+    "staff_role_changed": "{{actor}} એ {{name}} ને {{from}} થી {{to}} કર્યા",
+    "staff_deactivated": "{{actor}} એ {{name}} ને નિષ્ક્રિય કર્યા",
+    "staff_reactivated": "{{actor}} એ {{name}} ને ફરી સક્રિય કર્યા",
+    "staff_password_reset": "{{actor}} એ {{name}} નો પાસવર્ડ રીસેટ કર્યો"
+  },
+  "documents": {
+    "registrationCard": "નોંધણી કાર્ડ",
+    "invoice": "ઇન્વૉઇસ",
+    "estimate": "અંદાજ",
+    "print": "પ્રિન્ટ કરો",
+    "guestDetails": "મહેમાનની વિગતો",
+    "fullName": "પૂરું નામ",
+    "cityStateZip": "શહેર, રાજ્ય, ZIP",
+    "stayDetails": "રોકાણની વિગતો",
+    "registrationTerms": "સહી કરીને મહેમાન પુષ્ટિ કરે છે કે ઉપરની વિગતો સાચી છે અને આ પ્રોપર્ટીના દર અને નિયમો સાથે સંમત છે.",
+    "checkOutTime": "ચેક-આઉટનો સમય {{time}} છે.",
+    "guestSignature": "મહેમાનની સહી",
+    "date": "તારીખ",
+    "staffInitials": "સ્ટાફના આદ્યાક્ષર",
+    "noInvoice": "રદ અથવા \"આવ્યા નહીં\" બુકિંગનું ઇન્વૉઇસ બનતું નથી.",
+    "billTo": "બિલ કોને",
+    "stay": "રોકાણ",
+    "description": "વર્ણન",
+    "qty": "જથ્થો",
+    "amount": "રકમ",
+    "roomCharge": "રૂમ {{room}} {{type}}",
+    "subtotal": "પેટા-સરવાળો",
+    "tax": "કર ({{rate}}%)",
+    "estimateNote": "આ તે બુકિંગનો અંદાજ છે જેમાં હજી ચેક-ઇન થયું નથી.",
+    "thanks": "{{name}} માં રોકાવા બદલ આભાર.",
+    "idPhotos": "ID ફોટા",
+    "idPhotosPrivacy": "ખાનગી રીતે સાચવાય છે. ફક્ત તમારી ટીમ જોઈ શકે છે, અને ફક્ત માલિક અને મેનેજર હટાવી શકે છે.",
+    "photoType": "ફોટાનો પ્રકાર",
+    "addPhoto": "ફોટો ઉમેરો",
+    "noPhotos": "હજી કોઈ ID ફોટો નથી.",
+    "photoAlt": "ID ફોટો ({{kind}})",
+    "unavailable": "ઉપલબ્ધ નથી",
+    "removePhoto": "ફોટો હટાવો",
+    "removeConfirm": "આ ફોટો કાયમ માટે કાઢી નાખશે.",
+    "photoSaved": "ફોટો સાચવાયો",
+    "photoRemoved": "ફોટો હટાવાયો",
+    "notAnImage": "કૃપા કરીને ઇમેજ ફાઇલ પસંદ કરો.",
+    "kinds": {
+      "id_front": "ID આગળ",
+      "id_back": "ID પાછળ",
+      "other": "અન્ય"
+    }
   }
 }

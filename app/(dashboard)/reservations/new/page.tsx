@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useState, useEffect, useRef } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslation } from 'react-i18next'
 import { useForm, useWatch } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -19,7 +19,7 @@ import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
 import { useToast } from '@/components/ui/Toast'
 import { useAppStore } from '@/store/useAppStore'
-import { nightsBetween, todayISO, formatDate } from '@/lib/utils/dates'
+import { nightsBetween, todayISO, addDaysISO, formatDate } from '@/lib/utils/dates'
 import { useQueryClient } from '@tanstack/react-query'
 import { errorMessage } from '@/lib/utils/errors'
 import { formatCurrency } from '@/lib/utils/currency'
@@ -28,7 +28,22 @@ import type { Room, Guest } from '@/types'
 type Step = 1 | 2 | 3
 
 export default function NewReservationPage() {
+  // useSearchParams needs a Suspense boundary for the page to build/prerender.
+  return (
+    <Suspense fallback={null}>
+      <NewReservationForm />
+    </Suspense>
+  )
+}
+
+function NewReservationForm() {
   const { t } = useTranslation()
+  // The calendar links here with ?room=<id>&checkIn=<date> to start a booking from a free cell.
+  const searchParams = useSearchParams()
+  const presetRoom = searchParams.get('room')
+  const presetCheckInParam = searchParams.get('checkIn')
+  const presetCheckIn = presetCheckInParam && /^\d{4}-\d{2}-\d{2}$/.test(presetCheckInParam) ? presetCheckInParam : null
+  const presetApplied = useRef(false)
   const router = useRouter()
   const toast = useToast()
   const property = useAppStore((s) => s.property)
@@ -50,7 +65,8 @@ export default function NewReservationPage() {
   } = useForm<ReservationFormData>({
     resolver: zodResolver(reservationSchema),
     defaultValues: {
-      check_in_date: todayISO(property?.timezone),
+      check_in_date: presetCheckIn ?? todayISO(property?.timezone),
+      check_out_date: presetCheckIn ? addDaysISO(presetCheckIn, 1) : undefined,
       adults: 1,
       children: 0,
       source: 'walk_in',
@@ -94,6 +110,17 @@ export default function NewReservationPage() {
     setValue('room_id', room.id)
     setValue('rate_per_night', room.base_rate)
   }
+
+  // Pre-select the room chosen on the calendar once it is known to be available.
+  useEffect(() => {
+    if (presetApplied.current || !presetRoom || availableRooms.length === 0) return
+    const room = availableRooms.find((r) => r.id === presetRoom)
+    if (room) {
+      presetApplied.current = true
+      setValue('room_id', room.id)
+      setValue('rate_per_night', room.base_rate)
+    }
+  }, [availableRooms, presetRoom, setValue])
 
   const handleGuestSelect = (guest: Guest) => {
     if (guest.is_banned) {
@@ -379,6 +406,14 @@ export default function NewReservationPage() {
                 {...register('children', { valueAsNumber: true })}
               />
             </div>
+            <Input
+              label={t('reservation.vehiclePlate')}
+              className="mb-4 uppercase"
+              maxLength={20}
+              autoComplete="off"
+              error={errors.vehicle_plate?.message}
+              {...register('vehicle_plate')}
+            />
 
             <Select
               label={t('reservation.source')}

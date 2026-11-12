@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -14,6 +15,7 @@ import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
 import Card from '@/components/ui/Card'
 import { useToast } from '@/components/ui/Toast'
+import { isManager } from '@/lib/team/rules'
 
 const propertySchema = z.object({
   name: z.string().min(1, 'Property name is required'),
@@ -26,6 +28,7 @@ const propertySchema = z.object({
   timezone: z.string().min(1),
   check_in_time: z.string().min(1),
   check_out_time: z.string().min(1),
+  tax_rate: z.number().min(0).max(100),
 })
 
 const profileSchema = z.object({
@@ -59,6 +62,7 @@ export default function SettingsPage() {
   const profile = useAppStore((s) => s.profile)
   const setProperty = useAppStore((s) => s.setProperty)
   const setProfile = useAppStore((s) => s.setProfile)
+  const canEditProperty = isManager(profile?.role)
   const [savingProperty, setSavingProperty] = useState(false)
   const [savingProfile, setSavingProfile] = useState(false)
 
@@ -93,6 +97,7 @@ export default function SettingsPage() {
         timezone: property.timezone,
         check_in_time: property.check_in_time,
         check_out_time: property.check_out_time,
+        tax_rate: Number(property.tax_rate ?? 0),
       })
     }
   }, [property, resetProp])
@@ -110,8 +115,13 @@ export default function SettingsPage() {
     if (!property) return
     setSavingProperty(true)
     try {
+      // Only send tax_rate when it changed, so other settings still save on a database
+      // that has not run migration 004 (which adds the column) yet.
+      const { tax_rate, ...rest } = data
+      const taxChanged = tax_rate !== Number(property.tax_rate ?? 0)
       const updated = await updateProperty(property.id, {
-        ...data,
+        ...rest,
+        ...(taxChanged ? { tax_rate } : {}),
         email: data.email || undefined,
       })
       setProperty(updated)
@@ -214,9 +224,20 @@ export default function SettingsPage() {
                 {...regProp('check_out_time')}
               />
             </div>
+            <Input
+              label={t('settings.taxRate')}
+              hint={t('settings.taxRateHint')}
+              type="number"
+              step="0.01"
+              min={0}
+              max={100}
+              error={propErrors.tax_rate ? t('settings.taxRateInvalid') : undefined}
+              {...regProp('tax_rate', { valueAsNumber: true })}
+            />
           </div>
-          <div className="mt-6 flex justify-end">
-            <Button type="submit" loading={savingProperty} disabled={!propDirty}>
+          <div className="mt-6 flex items-center justify-end gap-4">
+            {!canEditProperty && <p className="text-xs text-gray-500">{t('settings.managersOnly')}</p>}
+            <Button type="submit" loading={savingProperty} disabled={!propDirty || !canEditProperty}>
               {t('actions.save')}
             </Button>
           </div>
@@ -243,9 +264,12 @@ export default function SettingsPage() {
               <Image src="/outline/profile.svg" alt="" width={18} height={18} />
               <div>
                 <p className="text-sm font-medium text-secondary">{t('settings.role')}</p>
-                <p className="text-xs text-gray-500 capitalize">{profile?.role ?? '—'}</p>
+                <p className="text-xs text-gray-500">{profile?.role ? t(`team.roles.${profile.role}`) : '—'}</p>
               </div>
             </div>
+            <Link href="/change-password" className="inline-block text-sm font-medium text-primary hover:underline">
+              {t('auth.changePassword')}
+            </Link>
           </div>
           <div className="mt-6 flex justify-end">
             <Button type="submit" loading={savingProfile} disabled={!profileDirty}>

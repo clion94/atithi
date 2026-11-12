@@ -9,21 +9,8 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils/cn'
 import { createClient } from '@/lib/supabase/client'
 import Logo from '@/components/Logo'
-
-type NavItem = {
-  key: string
-  href: string
-  icon: string
-}
-
-const navItems: NavItem[] = [
-  { key: 'dashboard',    href: '/dashboard',    icon: 'dashboard' },
-  { key: 'reservations', href: '/reservations', icon: 'bookings' },
-  { key: 'rooms',        href: '/rooms',        icon: 'rooms' },
-  { key: 'guests',       href: '/guests',       icon: 'guest' },
-  { key: 'housekeeping', href: '/housekeeping', icon: 'housekeeping' },
-  { key: 'reports',      href: '/reports',      icon: 'reports' },
-]
+import { navItemsFor } from './navItems'
+import { useAppStore } from '@/store/useAppStore'
 
 function NavIcon({ name, active }: { name: string; active: boolean }) {
   const variant = active ? 'filled' : 'outline'
@@ -43,6 +30,7 @@ export default function MobileNav() {
   const { t } = useTranslation()
   const pathname = usePathname()
   const router = useRouter()
+  const items = navItemsFor(useAppStore((s) => s.profile?.role))
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -89,7 +77,7 @@ export default function MobileNav() {
             </div>
 
             <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-              {navItems.map(({ key, href, icon }) => {
+              {items.map(({ key, href, icon }) => {
                 const isActive = pathname === href || pathname.startsWith(href + '/')
                 return (
                   <Link

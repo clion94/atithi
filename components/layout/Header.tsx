@@ -30,7 +30,7 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5 px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-30">
+    <header className="bg-white/70 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5 px-4 md:px-8 py-3 flex items-center justify-between sticky top-0 z-30 print:hidden">
       <div className="flex items-center gap-3">
         <MobileNav />
         <div>

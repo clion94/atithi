@@ -4,7 +4,7 @@ import type { Property, Profile } from '@/types'
 
 export async function updateProperty(
   id: string,
-  input: Partial<Pick<Property, 'name' | 'address' | 'city' | 'state' | 'zip' | 'phone' | 'email' | 'timezone' | 'check_in_time' | 'check_out_time'>>
+  input: Partial<Pick<Property, 'name' | 'address' | 'city' | 'state' | 'zip' | 'phone' | 'email' | 'timezone' | 'check_in_time' | 'check_out_time' | 'tax_rate'>>
 ): Promise<Property> {
   const supabase = createClient()
   const { data, error } = await supabase

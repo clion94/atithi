@@ -98,3 +98,14 @@ h2, h3 {
     scroll-behavior: auto !important;
   }
 }
+
+/* Printed documents (registration card, invoice): plain white page with sensible margins. */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+}

@@ -6,6 +6,18 @@
 -- script rolls back. Move or delete that reservation, then run it again.
 
 begin;
+  -- Audit rows written for the demo records (table exists from migration 004 on).
+  do $$
+  begin
+    if to_regclass('public.activity_log') is not null then
+      delete from activity_log where entity_id in (
+        select id from reservations where notes = '[DEMO]'
+        union select id from guests where notes = '[DEMO]'
+        union select id from rooms  where notes = '[DEMO]'
+      );
+    end if;
+  end
+  $$;
   delete from reservations where notes = '[DEMO]';
   delete from guests       where notes = '[DEMO]';
   delete from housekeeping_log
