@@ -99,10 +99,14 @@ h2, h3 {
   }
 }
 
-/* Printed documents (registration card, invoice): plain white page with sensible margins. */
+/* Printed documents (registration card, invoice).
+   The page margin lives on the document itself (Sheet: print:p-[14mm]) rather than in @page,
+   because browsers and the user's own "Margins" print setting can ignore @page margins, which
+   printed text right up to the paper's edge. @page margin 0 also keeps browsers from adding
+   their own URL/date header and footer. */
 @media print {
   @page {
-    margin: 14mm;
+    margin: 0;
   }
   html,
   body {

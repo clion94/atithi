@@ -41,7 +41,7 @@ export default function Sheet({ title, backHref, subtitle, children }: SheetProp
         </Button>
       </div>
 
-      <article className="bg-white p-8 text-secondary shadow-card ring-1 ring-black/5 md:p-12 print:p-0 print:shadow-none print:ring-0">
+      <article className="bg-white p-8 text-secondary shadow-card ring-1 ring-black/5 md:p-12 print:p-[14mm] print:shadow-none print:ring-0">
         <header className="flex items-start justify-between gap-6 border-b-2 border-secondary pb-5">
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight">{property?.name}</h1>
