@@ -115,8 +115,13 @@ export default function SettingsPage() {
     if (!property) return
     setSavingProperty(true)
     try {
+      // Only send tax_rate when it changed, so other settings still save on a database
+      // that has not run migration 004 (which adds the column) yet.
+      const { tax_rate, ...rest } = data
+      const taxChanged = tax_rate !== Number(property.tax_rate ?? 0)
       const updated = await updateProperty(property.id, {
-        ...data,
+        ...rest,
+        ...(taxChanged ? { tax_rate } : {}),
         email: data.email || undefined,
       })
       setProperty(updated)

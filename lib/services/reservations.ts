@@ -99,26 +99,34 @@ export async function getGuestReservations(guestId: string): Promise<Reservation
 // no out-of-order rooms, valid status changes) and sets check-in/out times, so
 // these are plain single-statement writes and are atomic.
 
-export async function createReservation(
-  input: ReservationFormData & { property_id: string }
-): Promise<Reservation> {
+type BookingInput = ReservationFormData & { property_id: string }
+
+/**
+ * The row to insert. vehicle_plate is only sent when there is one, so new bookings and
+ * walk-ins keep working on a database that has not run migration 004 yet.
+ */
+export function bookingRow(input: BookingInput, status: 'confirmed' | 'checked_in') {
+  const { vehicle_plate, ...rest } = input
+  const plate = normalizePlate(vehicle_plate)
+  return { ...rest, ...(plate ? { vehicle_plate: plate } : {}), status }
+}
+
+export async function createReservation(input: BookingInput): Promise<Reservation> {
   const supabase = createClient()
   const { data, error } = await supabase
     .from('reservations')
-    .insert({ ...input, vehicle_plate: normalizePlate(input.vehicle_plate), status: 'confirmed' })
+    .insert(bookingRow(input, 'confirmed'))
     .select(WITH_RELATIONS)
     .single()
   if (error) throw toError(error)
   return data
 }
 
-export async function walkInCheckIn(
-  input: ReservationFormData & { property_id: string }
-): Promise<Reservation> {
+export async function walkInCheckIn(input: BookingInput): Promise<Reservation> {
   const supabase = createClient()
   const { data, error } = await supabase
     .from('reservations')
-    .insert({ ...input, vehicle_plate: normalizePlate(input.vehicle_plate), status: 'checked_in' })
+    .insert(bookingRow(input, 'checked_in'))
     .select(WITH_RELATIONS)
     .single()
   if (error) throw toError(error)
