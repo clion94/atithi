@@ -8,21 +8,7 @@ import { cn } from '@/lib/utils/cn'
 import { createClient } from '@/lib/supabase/client'
 import { useAppStore } from '@/store/useAppStore'
 import Logo from '@/components/Logo'
-
-type NavItem = {
-  key: string
-  href: string
-  icon: string // filename without extension, e.g. "dashboard"
-}
-
-const navItems: NavItem[] = [
-  { key: 'dashboard',    href: '/dashboard',    icon: 'dashboard' },
-  { key: 'reservations', href: '/reservations', icon: 'bookings' },
-  { key: 'rooms',        href: '/rooms',        icon: 'rooms' },
-  { key: 'guests',       href: '/guests',       icon: 'guest' },
-  { key: 'housekeeping', href: '/housekeeping', icon: 'housekeeping' },
-  { key: 'reports',      href: '/reports',      icon: 'reports' },
-]
+import { navItemsFor } from './navItems'
 
 function NavIcon({ name, active }: { name: string; active: boolean }) {
   const variant = active ? 'filled' : 'outline'
@@ -42,6 +28,7 @@ export default function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const property = useAppStore((s) => s.property)
+  const items = navItemsFor(useAppStore((s) => s.profile?.role))
 
   const handleSignOut = async () => {
     const supabase = createClient()
@@ -50,7 +37,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="hidden md:flex md:flex-col md:w-64 bg-gradient-to-b from-secondary to-[#14122b] min-h-screen sticky top-0 h-screen">
+    <aside className="hidden md:flex md:flex-col md:w-64 bg-gradient-to-b from-secondary to-[#14122b] min-h-screen sticky top-0 h-screen print:hidden">
       {/* Logo */}
       <div className="px-6 py-5 border-b border-white/8">
         <Logo size={44} onDark />
@@ -61,7 +48,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ key, href, icon }) => {
+        {items.map(({ key, href, icon }) => {
           const isActive = pathname === href || pathname.startsWith(href + '/')
           return (
             <Link

@@ -1,6 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { ACTIVITY_ACTIONS } from '../utils/activity'
+import { ERROR_CODES } from '../team/types'
 
 const ROOT = path.resolve(__dirname, '../..')
 const LOCALES = ['en', 'hi', 'gu'] as const
@@ -51,6 +53,23 @@ describe('locales', () => {
     for (const [key, value] of Object.entries(tr)) {
       expect(tokens(value), key).toEqual(tokens(en[key]))
     }
+  })
+
+  it.each(LOCALES)('%s translates every key the app builds dynamically', (locale) => {
+    const tr = flatten(load(locale))
+    const dynamic = [
+      'activity.unknown',
+      'activity.system',
+      ...ACTIVITY_ACTIONS.map((a) => `activity.${a}`),
+      ...ERROR_CODES.map((c) => `team.errors.${c}`),
+      ...['owner', 'manager', 'staff'].map((r) => `team.roles.${r}`),
+      ...['id_front', 'id_back', 'other'].map((k) => `documents.kinds.${k}`),
+      ...['drivers_license', 'passport', 'state_id', 'other'].map((k) => `guest.idTypes.${k}`),
+      ...['clean', 'dirty', 'inspected', 'out_of_order', 'do_not_disturb'].map((s) => `room.status.${s}`),
+      ...['standard', 'double', 'suite', 'king', 'smoking', 'accessible'].map((s) => `room.type_options.${s}`),
+      ...['walk_in', 'phone', 'booking_com', 'expedia', 'direct_web', 'other'].map((s) => `reservation.source_options.${s}`),
+    ]
+    expect(dynamic.filter((k) => !(k in tr))).toEqual([])
   })
 
   it('every literal t("key") used in the app exists in en', () => {

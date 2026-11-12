@@ -10,6 +10,7 @@ export const reservationSchema = z.object({
   children: z.number().int().min(0).max(10),
   source: z.enum(['walk_in', 'phone', 'booking_com', 'expedia', 'direct_web', 'other']),
   special_requests: z.string().optional(),
+  vehicle_plate: z.string().max(20).optional(),
   notes: z.string().optional(),
 }).refine(
   (data) => data.check_out_date > data.check_in_date,

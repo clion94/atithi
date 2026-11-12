@@ -5,8 +5,9 @@ import { useParams } from 'next/navigation'
 import { useQueryClient } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useTranslation, Trans } from 'react-i18next'
-import { ArrowLeft, UserCheck, LogOut, X, BedDouble, UserX } from 'lucide-react'
+import { ArrowLeft, UserCheck, LogOut, X, BedDouble, UserX, FileText, Receipt } from 'lucide-react'
 import {
+  updateVehiclePlate,
   getReservation,
   checkIn as doCheckIn,
   checkOut as doCheckOut,
@@ -16,6 +17,7 @@ import {
 import { ReservationStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
 import Card from '@/components/ui/Card'
+import Input from '@/components/ui/Input'
 import Modal from '@/components/ui/Modal'
 import Spinner from '@/components/ui/Spinner'
 import { useToast } from '@/components/ui/Toast'
@@ -35,10 +37,14 @@ export default function ReservationDetailPage() {
   const [loading, setLoading] = useState(true)
   const [actionLoading, setActionLoading] = useState(false)
   const [cancelModal, setCancelModal] = useState(false)
+  const [plate, setPlate] = useState('')
 
   useEffect(() => {
     getReservation(id)
-      .then(setReservation)
+      .then((r) => {
+        setReservation(r)
+        setPlate(r.vehicle_plate ?? '')
+      })
       .catch((e) => toast.error(errorMessage(e)))
       .finally(() => setLoading(false))
   }, [id, toast])
@@ -82,6 +88,23 @@ export default function ReservationDetailPage() {
       await queryClient.invalidateQueries()
       toast.success(t('reservation.cancelled'))
       setCancelModal(false)
+    } catch (e: unknown) {
+      toast.error(errorMessage(e))
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const editablePlate = !!reservation && (reservation.status === 'confirmed' || reservation.status === 'checked_in')
+
+  const handleSavePlate = async () => {
+    if (!reservation) return
+    setActionLoading(true)
+    try {
+      const updated = await updateVehiclePlate(reservation.id, plate)
+      setReservation(updated)
+      setPlate(updated.vehicle_plate ?? '')
+      toast.success(t('reservation.plateSaved'))
     } catch (e: unknown) {
       toast.error(errorMessage(e))
     } finally {
@@ -164,6 +187,22 @@ export default function ReservationDetailPage() {
             {t('actions.checkOut')}
           </Button>
         )}
+        {reservation.status !== 'cancelled' && reservation.status !== 'no_show' && (
+          <>
+            <Link href={`/reservations/${reservation.id}/registration`}>
+              <Button variant="outline">
+                <FileText className="h-4 w-4" />
+                {t('documents.registrationCard')}
+              </Button>
+            </Link>
+            <Link href={`/reservations/${reservation.id}/invoice`}>
+              <Button variant="outline">
+                <Receipt className="h-4 w-4" />
+                {t('documents.invoice')}
+              </Button>
+            </Link>
+          </>
+        )}
       </div>
 
       {/* Reservation details */}
@@ -185,6 +224,37 @@ export default function ReservationDetailPage() {
             <InfoRow label={t('reservation.source')} value={t(`reservation.source_options.${reservation.source}`)} />
             {reservation.special_requests && (
               <InfoRow label={t('reservation.specialRequests')} value={reservation.special_requests} />
+            )}
+            {editablePlate ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  handleSavePlate()
+                }}
+                className="flex items-end gap-2 pt-1"
+              >
+                <Input
+                  label={t('reservation.vehiclePlate')}
+                  value={plate}
+                  onChange={(e) => setPlate(e.target.value)}
+                  maxLength={20}
+                  autoComplete="off"
+                  className="uppercase"
+                />
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="outline"
+                  loading={actionLoading}
+                  disabled={plate.trim().toUpperCase() === (reservation.vehicle_plate ?? '')}
+                >
+                  {t('actions.save')}
+                </Button>
+              </form>
+            ) : (
+              reservation.vehicle_plate && (
+                <InfoRow label={t('reservation.vehiclePlate')} value={reservation.vehicle_plate} />
+              )
             )}
           </dl>
         </Card>

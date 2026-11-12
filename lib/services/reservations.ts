@@ -3,6 +3,7 @@ import type { Reservation, ReservationStatus } from '@/types'
 import type { ReservationFormData } from '@/lib/validations/reservation'
 import { toError } from '@/lib/utils/errors'
 import { sanitizeSearch } from '@/lib/utils/search'
+import { normalizePlate } from '@/lib/utils/plate'
 import { computeAvailability, computeDailyReport } from '@/lib/utils/stats'
 
 export const PAGE_SIZE = 50
@@ -104,7 +105,7 @@ export async function createReservation(
   const supabase = createClient()
   const { data, error } = await supabase
     .from('reservations')
-    .insert({ ...input, status: 'confirmed' })
+    .insert({ ...input, vehicle_plate: normalizePlate(input.vehicle_plate), status: 'confirmed' })
     .select(WITH_RELATIONS)
     .single()
   if (error) throw toError(error)
@@ -117,7 +118,7 @@ export async function walkInCheckIn(
   const supabase = createClient()
   const { data, error } = await supabase
     .from('reservations')
-    .insert({ ...input, status: 'checked_in' })
+    .insert({ ...input, vehicle_plate: normalizePlate(input.vehicle_plate), status: 'checked_in' })
     .select(WITH_RELATIONS)
     .single()
   if (error) throw toError(error)
@@ -132,6 +133,18 @@ export async function updateReservationStatus(
   const { data, error } = await supabase
     .from('reservations')
     .update({ status })
+    .eq('id', id)
+    .select(WITH_RELATIONS)
+    .single()
+  if (error) throw toError(error)
+  return data
+}
+
+export async function updateVehiclePlate(id: string, plate: string): Promise<Reservation> {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('reservations')
+    .update({ vehicle_plate: normalizePlate(plate) })
     .eq('id', id)
     .select(WITH_RELATIONS)
     .single()
