@@ -7,7 +7,7 @@ import enCommon from '@/public/locales/en/common.json'
 import guCommon from '@/public/locales/gu/common.json'
 import hiCommon from '@/public/locales/hi/common.json'
 
-const STORAGE_KEY = 'atithi_language'
+const STORAGE_KEY = 'waypoint_language'
 
 export const LANGUAGES = [
   { code: 'en', label: 'English' },

@@ -1,4 +1,4 @@
--- Atithi: add mock data to an EXISTING property (safe for a live database).
+-- Waypoint: add mock data to an EXISTING property (safe for a live database).
 -- Run in the Supabase SQL editor. Everything added is tagged '[DEMO]' in `notes`
 -- so supabase/demo/remove_demo_data.sql can take it out again.
 

@@ -1,4 +1,4 @@
--- Atithi PMS Demo Seed Data
+-- Waypoint PMS Demo Seed Data
 -- Run after 001_initial_schema.sql
 
 -- ─── DEMO PROPERTY ───────────────────────────────────────────

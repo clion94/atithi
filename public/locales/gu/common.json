@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "અતિથિ",
-    "tagline": "મહેમાન જ સર્વસ્વ છે."
+    "name": "Waypoint",
+    "tagline": "તમારી મોટેલ સરળતાથી ચલાવો"
   },
   "nav": {
     "dashboard": "ડેશબોર્ડ",
@@ -250,7 +250,7 @@
     "checkingInToday": "આજે ચેક-ઇન · {{date}}"
   },
   "setup": {
-    "welcome": "અતિથિમાં આપનું સ્વાગત છે",
+    "welcome": "Waypoint માં આપનું સ્વાગત છે",
     "subtitle": "ચાલો તમારી પ્રોપર્ટી સેટ કરીએ",
     "aboutYou": "તમારા વિશે",
     "yourName": "તમારું નામ",

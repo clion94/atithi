@@ -257,7 +257,7 @@ export default function SettingsPage() {
 
       {/* App version */}
       <p className="text-center text-xs text-gray-400 pb-4">
-        Atithi PMS · अतिथि देवो भव
+        {t('app.name')}
       </p>
     </div>
   )

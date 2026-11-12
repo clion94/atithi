@@ -1,4 +1,4 @@
-# Atithi
+# Waypoint
 
 Property management for independent motels: reservations, walk-ins, rooms, housekeeping, guests and daily reports.
 English, Hindi and Gujarati. Built with Next.js 16 (App Router), React 19, Tailwind 4 and Supabase (Postgres + Auth).

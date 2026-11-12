@@ -2,14 +2,16 @@
 
 @theme {
   /* Brand colors */
-  --color-primary: #E07B00;
-  --color-primary-light: #F59E0B;
-  --color-primary-dark: #B45309;
-  --color-secondary: #1B2B4B;
-  --color-secondary-light: #2D4A7A;
-  --color-accent: #0D9488;
-  --color-accent-light: #14B8A6;
-  --color-surface: #F5F5F7;
+  /* Violet is the brand color on purpose: it never collides with the room-status
+     colors below (green clean, amber dirty, blue inspected, red out of order). */
+  --color-primary: #5B3FD9;
+  --color-primary-light: #7C5CF0;
+  --color-primary-dark: #4527B8;
+  --color-secondary: #1D1A3B;
+  --color-secondary-light: #34306A;
+  --color-accent: #E0457B;
+  --color-accent-light: #F472A0;
+  --color-surface: #F6F5FA;
   --color-error: #DC2626;
   --color-success: #16A34A;
   --color-warning: #D97706;

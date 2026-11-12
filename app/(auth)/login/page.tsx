@@ -1,13 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { Globe } from 'lucide-react'
+import Logo from '@/components/Logo'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
@@ -90,14 +90,7 @@ export default function LoginPage() {
       <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-float ring-1 ring-white/20 p-8 animate-pop-in">
         {/* Branding */}
         <div className="flex flex-col items-center mb-8">
-          <Image
-            src="/logos/atithi-logo-256x256.png"
-            alt={t('app.name')}
-            width={96}
-            height={96}
-            className="mb-3"
-            priority
-          />
+          <Logo size={72} stacked className="mb-3" />
           <p className="text-sm text-gray-500">{t('app.tagline')}</p>
         </div>
 
@@ -130,9 +123,6 @@ export default function LoginPage() {
         </form>
       </div>
 
-      <p className="text-center text-xs text-white/40 mt-6">
-        अतिथि देवो भव · The guest is god.
-      </p>
     </div>
   )
 }

@@ -1,4 +1,4 @@
--- Atithi: remove everything add_demo_data.sql created ('[DEMO]' in notes).
+-- Waypoint: remove everything add_demo_data.sql created ('[DEMO]' in notes).
 -- Rows you created yourself are never touched.
 -- Folio items are removed automatically with their reservations (ON DELETE CASCADE).
 --
