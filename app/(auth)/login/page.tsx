@@ -11,8 +11,7 @@ import { Globe } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import { setStoredLanguage } from '@/lib/i18n/client'
-import i18n from '@/lib/i18n/client'
+import { LANGUAGES, setStoredLanguage } from '@/lib/i18n/client'
 import { useToast } from '@/components/ui/Toast'
 
 const loginSchema = z.object({
@@ -22,14 +21,8 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>
 
-const LANGUAGES = [
-  { code: 'en', label: 'English' },
-  { code: 'gu', label: 'ગુજરાતી' },
-  { code: 'hi', label: 'हिंदी' },
-]
-
 export default function LoginPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const router = useRouter()
   const toast = useToast()
   const [loading, setLoading] = useState(false)

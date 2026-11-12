@@ -4,13 +4,13 @@
     "tagline": "मेहमान है सब कुछ।"
   },
   "nav": {
-    "dashboard": "डॅशबॉर्ड",
-    "reservations": "बॅकिंग",
+    "dashboard": "डैशबोर्ड",
+    "reservations": "बुकिंग",
     "rooms": "कमरे",
     "guests": "मेहमान",
-    "housekeeping": "हाउसकॅपिंग",
-    "reports": "रिपॅर्ट",
-    "settings": "सॅटिंग"
+    "housekeeping": "हाउसकीपिंग",
+    "reports": "रिपोर्ट",
+    "settings": "सेटिंग्स"
   },
   "reservation": {
     "new": "नई बुकिंग",
@@ -30,7 +30,8 @@
       "checked_in": "चेक इन",
       "checked_out": "चेक आउट",
       "cancelled": "रद्द",
-      "no_show": "नहीं आए"
+      "no_show": "नहीं आए",
+      "label": "स्थिति"
     },
     "source_options": {
       "walk_in": "सीधे आए",
@@ -39,7 +40,31 @@
       "expedia": "Expedia",
       "direct_web": "वेबसाइट",
       "other": "अन्य"
-    }
+    },
+    "title": "बुकिंग",
+    "walkIn": "वॉक-इन",
+    "searchPlaceholder": "मेहमान के नाम या फ़ोन से खोजें…",
+    "nightsCount_one": "{{count}} रात",
+    "nightsCount_other": "{{count}} रातें",
+    "checkedInTo": "{{name}} का कमरा {{room}} में चेक इन हुआ",
+    "checkedOutName": "{{name}} ने चेक आउट किया",
+    "created": "बुकिंग बन गई",
+    "cancelled": "बुकिंग रद्द की गई",
+    "markedNoShow": "नहीं आए के रूप में दर्ज किया गया",
+    "notFound": "बुकिंग नहीं मिली",
+    "guestInfo": "मेहमान की जानकारी",
+    "name": "नाम",
+    "viewGuest": "मेहमान की प्रोफ़ाइल देखें",
+    "noGuestInfo": "मेहमान की कोई जानकारी नहीं",
+    "activity": "गतिविधि",
+    "roomStay": "कमरा और ठहराव",
+    "cancelTitle": "बुकिंग रद्द करें",
+    "cancelConfirm": "क्या आप <strong>{{name}}</strong> की यह बुकिंग रद्द करना चाहते हैं? इसे वापस नहीं किया जा सकता।",
+    "stepDatesRoom": "तारीखें और कमरा",
+    "selectDatesRoom": "तारीखें और कमरा चुनें",
+    "noRoomsForDates": "इन तारीखों के लिए कोई कमरा उपलब्ध नहीं",
+    "selectGuest": "मेहमान चुनें या जोड़ें",
+    "confirmTitle": "बुकिंग की पुष्टि करें"
   },
   "room": {
     "number": "कमरा नंबर",
@@ -61,7 +86,10 @@
       "king": "किंग",
       "smoking": "स्मोकिंग",
       "accessible": "सुलभ"
-    }
+    },
+    "newStatus": "नई स्थिति",
+    "notesOptional": "नोट (वैकल्पिक)",
+    "statusUpdated": "कमरे की स्थिति अपडेट हुई"
   },
   "guest": {
     "firstName": "पहला नाम",
@@ -75,7 +103,31 @@
     "banned": "प्रतिबंधित मेहमान",
     "banReason": "प्रतिबंध का कारण",
     "vip": "VIP",
-    "stayHistory": "रुकने का इतिहास"
+    "stayHistory": "रुकने का इतिहास",
+    "count_one": "{{count}} मेहमान",
+    "count_other": "{{count}} मेहमान",
+    "searchPlaceholder": "नाम या फ़ोन से खोजें…",
+    "bannedBadge": "प्रतिबंधित",
+    "since": "{{date}} से",
+    "notFound": "मेहमान नहीं मिला",
+    "updated": "मेहमान की जानकारी अपडेट हुई",
+    "banApplied": "मेहमान पर प्रतिबंध लगा दिया गया",
+    "banRemoved": "प्रतिबंध हटा दिया गया",
+    "isBanned": "यह मेहमान प्रतिबंधित है",
+    "information": "मेहमान की जानकारी",
+    "selectIdType": "ID प्रकार चुनें",
+    "idTypes": {
+      "drivers_license": "ड्राइविंग लाइसेंस",
+      "passport": "पासपोर्ट",
+      "state_id": "राज्य पहचान पत्र",
+      "other": "अन्य"
+    },
+    "memberSince": "सदस्य बने",
+    "banIntro": "<strong>{{name}}</strong> पर प्रतिबंध लगाने से नई बुकिंग रुक जाएगी और चेतावनी दिखेगी।",
+    "banReasonLabel": "प्रतिबंध का कारण *",
+    "banReasonPlaceholder": "बताएं कि इस मेहमान पर प्रतिबंध क्यों लगाया जा रहा है…",
+    "bannedWarning": "{{name}} प्रतिबंधित है: {{reason}}",
+    "noReason": "कोई कारण नहीं बताया गया"
   },
   "housekeeping": {
     "title": "हाउसकीपिंग",
@@ -83,7 +135,12 @@
     "lastUpdated": "अंतिम अपडेट",
     "allRooms": "सभी कमरे",
     "dirtyOnly": "केवल गंदे",
-    "inspectedOnly": "केवल जांचे गए"
+    "inspectedOnly": "केवल जांचे गए",
+    "markedAs": "कमरा {{room}} को {{status}} के रूप में दर्ज किया गया",
+    "markInspected": "जांचा गया दर्ज करें",
+    "markClean": "साफ दर्ज करें",
+    "markDirty": "गंदा दर्ज करें",
+    "clearDnd": "परेशान न करें हटाएं"
   },
   "reports": {
     "daily": "दैनिक रिपोर्ट",
@@ -93,7 +150,9 @@
     "adr": "औसत दैनिक दर",
     "arrivals": "आगमन",
     "departures": "प्रस्थान",
-    "inHouse": "ठहरे हुए"
+    "inHouse": "ठहरे हुए",
+    "noActivity": "इस तारीख पर कोई गतिविधि नहीं",
+    "allReservations": "सभी बुकिंग — {{date}}"
   },
   "settings": {
     "propertyInfo": "संपत्ति जानकारी",
@@ -109,7 +168,9 @@
     "checkOutTime": "चेक-आउट समय",
     "myProfile": "मेरी प्रोफ़ाइल",
     "fullName": "पूरा नाम",
-    "role": "भूमिका"
+    "role": "भूमिका",
+    "propertySaved": "प्रॉपर्टी सेटिंग्स सहेजी गईं",
+    "profileSaved": "प्रोफ़ाइल सहेजी गई"
   },
   "actions": {
     "save": "सहेजें",
@@ -127,7 +188,14 @@
     "next": "आगे",
     "signOut": "साइन आउट",
     "banGuest": "प्रतिबंध लगाएं",
-    "unbanGuest": "प्रतिबंध हटाएं"
+    "unbanGuest": "प्रतिबंध हटाएं",
+    "loadMore": "और दिखाएं",
+    "noShow": "नहीं आए के रूप में दर्ज करें",
+    "keepIt": "रहने दें",
+    "yesCancel": "हां, रद्द करें",
+    "addGuestContinue": "मेहमान जोड़ें और आगे बढ़ें",
+    "checkInNow": "अभी चेक इन करें",
+    "walkInCheckIn": "वॉक-इन चेक इन"
   },
   "common": {
     "loading": "लोड हो रहा है...",
@@ -140,7 +208,11 @@
     "guests": "मेहमान",
     "property": "प्रॉपर्टी",
     "confirmDelete": "क्या आप इसे हटाना चाहते हैं?",
-    "thisActionCannotBeUndone": "यह क्रिया पूर्ववत नहीं की जा सकती।"
+    "thisActionCannotBeUndone": "यह क्रिया पूर्ववत नहीं की जा सकती।",
+    "retry": "फिर से कोशिश करें",
+    "dismiss": "खारिज करें",
+    "openMenu": "मेनू खोलें",
+    "closeMenu": "मेनू बंद करें"
   },
   "auth": {
     "signIn": "साइन इन",
@@ -159,6 +231,36 @@
     "todayArrivals": "आज के आगमन",
     "todayDepartures": "आज के प्रस्थान",
     "quickActions": "त्वरित क्रियाएं",
-    "occupancyRate": "अधिभोग दर"
+    "occupancyRate": "अधिभोग दर",
+    "ofSellable": "{{rooms}} बिकने योग्य कमरों में से"
+  },
+  "filters": {
+    "all": "सभी",
+    "today": "आज",
+    "arrivals": "आगमन",
+    "departures": "प्रस्थान",
+    "inhouse": "ठहरे हुए"
+  },
+  "walkIn": {
+    "title": "वॉक-इन चेक इन",
+    "selectRoom": "कमरा और प्रस्थान की तारीख चुनें",
+    "checkOutDate": "चेक आउट की तारीख",
+    "noRooms": "कोई कमरा उपलब्ध नहीं",
+    "confirmTitle": "पुष्टि करें और चेक इन करें",
+    "checkingInToday": "आज चेक इन · {{date}}"
+  },
+  "setup": {
+    "welcome": "अतिथि में आपका स्वागत है",
+    "subtitle": "आइए आपकी प्रॉपर्टी सेट करें",
+    "aboutYou": "आपके बारे में",
+    "yourName": "आपका नाम",
+    "yourNamePlaceholder": "जैसे रमेश पटेल",
+    "propertyDetails": "प्रॉपर्टी का विवरण",
+    "propertyName": "प्रॉपर्टी का नाम *",
+    "propertyNamePlaceholder": "जैसे सनशाइन मोटल",
+    "hours": "समय",
+    "create": "मेरी प्रॉपर्टी बनाएं",
+    "creating": "सेट हो रहा है…",
+    "footer": "आप यह सब बाद में सेटिंग्स में बदल सकते हैं"
   }
 }

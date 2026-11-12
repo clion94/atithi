@@ -1,7 +1,8 @@
 'use client'
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useCallback, useMemo, type ReactNode } from 'react'
 import { CheckCircle, XCircle, X, AlertTriangle } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils/cn'
 
 type ToastType = 'success' | 'error' | 'warning'
@@ -35,11 +36,16 @@ export function ToastProvider({ children }: { children: ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id))
   }, [])
 
-  const value: ToastContextValue = {
-    success: (msg) => add('success', msg),
-    error: (msg) => add('error', msg),
-    warning: (msg) => add('warning', msg),
-  }
+  // Stable identity: consumers list `toast` in effect/callback dependencies, and a
+  // new object every render made them re-run (and refetch) each time a toast appeared.
+  const value = useMemo<ToastContextValue>(
+    () => ({
+      success: (msg) => add('success', msg),
+      error: (msg) => add('error', msg),
+      warning: (msg) => add('warning', msg),
+    }),
+    [add]
+  )
 
   return (
     <ToastContext.Provider value={value}>
@@ -54,6 +60,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 }
 
 function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) => void }) {
+  const { t } = useTranslation()
   const icons: Record<ToastType, ReactNode> = {
     success: <CheckCircle className="h-5 w-5 text-success flex-shrink-0" />,
     error: <XCircle className="h-5 w-5 text-error flex-shrink-0" />,
@@ -77,7 +84,7 @@ function ToastItem({ toast, onRemove }: { toast: Toast; onRemove: (id: string) =
       <p className="flex-1 text-[15px] leading-snug text-secondary">{toast.message}</p>
       <button
         onClick={() => onRemove(toast.id)}
-        aria-label="Dismiss"
+        aria-label={t('common.dismiss')}
         className="text-gray-400 hover:text-gray-600 flex-shrink-0"
       >
         <X className="h-4 w-4" />

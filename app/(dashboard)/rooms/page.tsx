@@ -1,11 +1,14 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { BedDouble } from 'lucide-react'
-import { getRooms, updateRoomStatus } from '@/lib/services/rooms'
+import { updateRoomStatus } from '@/lib/services/rooms'
+import { useRooms } from '@/hooks/useRooms'
+import ErrorState from '@/components/ui/ErrorState'
 import { roomStatusSchema, type RoomStatusFormData } from '@/lib/validations/room'
 import { RoomStatusBadge } from '@/components/ui/Badge'
 import Button from '@/components/ui/Button'
@@ -15,6 +18,7 @@ import Modal from '@/components/ui/Modal'
 import Spinner from '@/components/ui/Spinner'
 import { useToast } from '@/components/ui/Toast'
 import type { Room, RoomStatus } from '@/types'
+import { errorMessage } from '@/lib/utils/errors'
 import { cn } from '@/lib/utils/cn'
 import { formatCurrency } from '@/lib/utils/currency'
 
@@ -31,8 +35,8 @@ type FilterStatus = 'all' | RoomStatus
 export default function RoomsPage() {
   const { t } = useTranslation()
   const toast = useToast()
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [loading, setLoading] = useState(true)
+  const queryClient = useQueryClient()
+  const { data: rooms = [], isPending: loading, error: loadError, refetch } = useRooms()
   const [filter, setFilter] = useState<FilterStatus>('all')
   const [typeFilter, setTypeFilter] = useState('all')
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null)
@@ -42,30 +46,17 @@ export default function RoomsPage() {
     resolver: zodResolver(roomStatusSchema),
   })
 
-  const loadRooms = useCallback(async () => {
-    try {
-      const data = await getRooms()
-      setRooms(data)
-    } catch (e: unknown) {
-      toast.error((e as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }, [toast])
-
-  useEffect(() => { loadRooms() }, [loadRooms])
-
   const handleStatusUpdate = async (data: RoomStatusFormData) => {
     if (!selectedRoom) return
     setUpdating(true)
     try {
       await updateRoomStatus(selectedRoom.id, data.status, data.notes)
-      toast.success('Room status updated')
+      toast.success(t('room.statusUpdated'))
       setSelectedRoom(null)
       reset()
-      loadRooms()
+      await queryClient.invalidateQueries({ queryKey: ['rooms'] })
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     } finally {
       setUpdating(false)
     }
@@ -103,6 +94,10 @@ export default function RoomsPage() {
     { value: 'out_of_order', label: t('room.status.out_of_order') },
     { value: 'do_not_disturb', label: t('room.status.do_not_disturb') },
   ]
+
+  if (loadError) {
+    return <ErrorState message={loadError.message} onRetry={() => refetch()} />
+  }
 
   if (loading) {
     return (
@@ -181,17 +176,17 @@ export default function RoomsPage() {
             <span className="text-sm text-gray-500 capitalize">{selectedRoom?.room_type} · Floor {selectedRoom?.floor ?? '—'}</span>
           </div>
           <Select
-            label="New Status"
+            label={t('room.newStatus')}
             options={updateStatusOptions}
             error={errors.status?.message}
             {...register('status')}
           />
-          <Textarea label="Notes (optional)" rows={3}
+          <Textarea label={t('room.notesOptional')} rows={3}
               {...register('notes')}
             />
           <div className="flex gap-3 pt-2">
             <Button type="submit" loading={updating} className="flex-1">
-              Update Status
+              {t('housekeeping.updateStatus')}
             </Button>
             <Button type="button" variant="outline" onClick={() => { setSelectedRoom(null); reset() }}>
               {t('actions.cancel')}

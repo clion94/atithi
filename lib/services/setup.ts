@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/client'
+import { toError } from '@/lib/utils/errors'
 import type { Property } from '@/types'
 
 export async function createPropertyForUser(input: {
@@ -28,7 +29,7 @@ export async function createPropertyForUser(input: {
     p_state:          input.state ?? null,
     p_zip:            input.zip ?? null,
   })
-  if (error) throw error
+  if (error) throw toError(error)
   // rpc returns setof → array
   const property = Array.isArray(data) ? data[0] : data
   if (!property) throw new Error('Property creation failed')

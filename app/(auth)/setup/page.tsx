@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -27,7 +28,7 @@ const setupSchema = z.object({
 
 type SetupFormData = z.infer<typeof setupSchema>
 
-const US_TIMEZONES = [
+const TIMEZONES = [
   { value: 'America/New_York',    label: 'Eastern (ET)' },
   { value: 'America/Chicago',     label: 'Central (CT)' },
   { value: 'America/Denver',      label: 'Mountain (MT)' },
@@ -35,9 +36,11 @@ const US_TIMEZONES = [
   { value: 'America/Los_Angeles', label: 'Pacific (PT)' },
   { value: 'America/Anchorage',   label: 'Alaska (AKT)' },
   { value: 'Pacific/Honolulu',    label: 'Hawaii (HT)' },
+  { value: 'Asia/Kolkata',        label: 'India (IST)' },
 ]
 
 export default function SetupPage() {
+  const { t } = useTranslation()
   const router = useRouter()
   const toast = useToast()
   const [loading, setLoading] = useState(false)
@@ -79,18 +82,18 @@ export default function SetupPage() {
             height={48}
           />
           <div>
-            <h1 className="font-display text-2xl font-bold text-white">Welcome to Atithi</h1>
-            <p className="text-sm text-white/60">Let's set up your property</p>
+            <h1 className="font-display text-2xl font-bold text-white">{t('setup.welcome')}</h1>
+            <p className="text-sm text-white/60">{t('setup.subtitle')}</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="px-8 py-6 space-y-5">
           {/* Your name */}
           <div>
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">About You</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('setup.aboutYou')}</p>
             <Input
-              label="Your Name"
-              placeholder="e.g. Ramesh Patel"
+              label={t('setup.yourName')}
+              placeholder={t('setup.yourNamePlaceholder')}
               error={errors.full_name?.message}
               {...register('full_name')}
             />
@@ -100,35 +103,35 @@ export default function SetupPage() {
 
           {/* Property details */}
           <div>
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Property Details</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('setup.propertyDetails')}</p>
             <div className="space-y-4">
               <Input
-                label="Property Name *"
-                placeholder="e.g. Sunshine Motel"
+                label={t('setup.propertyName')}
+                placeholder={t('setup.propertyNamePlaceholder')}
                 error={errors.name?.message}
                 {...register('name')}
               />
               <Input
-                label="Phone Number"
+                label={t('settings.phone')}
                 type="tel"
                 placeholder="(512) 555-0100"
                 {...register('phone')}
               />
               <Input
-                label="Street Address"
+                label={t('settings.address')}
                 placeholder="1234 Main St"
                 {...register('address')}
               />
               <div className="grid grid-cols-3 gap-3">
                 <div className="col-span-1">
                   <Input
-                    label="City"
+                    label={t('settings.city')}
                     placeholder="Austin"
                     {...register('city')}
                   />
                 </div>
-                <Input label="State" placeholder="TX" {...register('state')} />
-                <Input label="ZIP" placeholder="78701" {...register('zip')} />
+                <Input label={t('settings.state')} placeholder="TX" {...register('state')} />
+                <Input label={t('settings.zip')} placeholder="78701" {...register('zip')} />
               </div>
             </div>
           </div>
@@ -137,23 +140,23 @@ export default function SetupPage() {
 
           {/* Times & timezone */}
           <div>
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Hours</p>
+            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-3">{t('setup.hours')}</p>
             <div className="space-y-4">
               <Select
-                label="Timezone"
-                options={US_TIMEZONES}
+                label={t('settings.timezone')}
+                options={TIMEZONES}
                 error={errors.timezone?.message}
                 {...register('timezone')}
               />
               <div className="grid grid-cols-2 gap-4">
                 <Input
-                  label="Check-in Time"
+                  label={t('settings.checkInTime')}
                   type="time"
                   error={errors.check_in_time?.message}
                   {...register('check_in_time')}
                 />
                 <Input
-                  label="Check-out Time"
+                  label={t('settings.checkOutTime')}
                   type="time"
                   error={errors.check_out_time?.message}
                   {...register('check_out_time')}
@@ -163,11 +166,11 @@ export default function SetupPage() {
           </div>
 
           <Button type="submit" loading={loading} className="w-full" size="lg">
-            {loading ? 'Setting up…' : 'Create My Property'}
+            {loading ? t('setup.creating') : t('setup.create')}
           </Button>
 
           <p className="text-center text-xs text-gray-400">
-            You can update all of this later in Settings
+            {t('setup.footer')}
           </p>
         </form>
       </div>

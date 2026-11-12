@@ -9,7 +9,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { updateProperty, updateProfile } from '@/lib/services/settings'
 import { useAppStore } from '@/store/useAppStore'
 import { setStoredLanguage } from '@/lib/i18n/client'
-import i18n from '@/lib/i18n/client'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Select from '@/components/ui/Select'
@@ -54,7 +53,7 @@ const LANGUAGES = [
 ]
 
 export default function SettingsPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const toast = useToast()
   const property = useAppStore((s) => s.property)
   const profile = useAppStore((s) => s.profile)
@@ -116,7 +115,7 @@ export default function SettingsPage() {
         email: data.email || undefined,
       })
       setProperty(updated)
-      toast.success('Property settings saved')
+      toast.success(t('settings.propertySaved'))
     } catch (e: unknown) {
       toast.error((e as Error).message)
     } finally {
@@ -132,7 +131,7 @@ export default function SettingsPage() {
       setProfile(updated)
       setStoredLanguage(data.language)
       i18n.changeLanguage(data.language)
-      toast.success('Profile saved')
+      toast.success(t('settings.profileSaved'))
     } catch (e: unknown) {
       toast.error((e as Error).message)
     } finally {

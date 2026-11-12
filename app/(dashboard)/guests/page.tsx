@@ -1,56 +1,45 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslation } from 'react-i18next'
 import { Users, AlertTriangle } from 'lucide-react'
-import { getGuests } from '@/lib/services/guests'
+import { useGuests } from '@/hooks/useGuests'
+import { useDebouncedValue } from '@/hooks/useDebouncedValue'
+import Button from '@/components/ui/Button'
+import ErrorState from '@/components/ui/ErrorState'
 import Badge from '@/components/ui/Badge'
 import Input from '@/components/ui/Input'
 import Spinner from '@/components/ui/Spinner'
-import { useToast } from '@/components/ui/Toast'
-import type { Guest } from '@/types'
 import { formatDate } from '@/lib/utils/dates'
 
 export default function GuestsPage() {
   const { t } = useTranslation()
-  const toast = useToast()
-  const [guests, setGuests] = useState<Guest[]>([])
-  const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
-
-  const load = useCallback(async () => {
-    try {
-      const data = await getGuests(search)
-      setGuests(data)
-    } catch (e: unknown) {
-      toast.error((e as Error).message)
-    } finally {
-      setLoading(false)
-    }
-  }, [search, toast])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => load(), 300)
-    return () => clearTimeout(timeout)
-  }, [load])
+  const debouncedSearch = useDebouncedValue(search)
+  const { data, isPending, error, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useGuests(debouncedSearch)
+  const guests = data?.pages.flatMap((p) => p.rows) ?? []
+  const loading = isPending
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('nav.guests')}</h1>
-        <span className="text-sm text-gray-500">{guests.length} guests</span>
+        <span className="text-sm text-gray-500">{t('guest.count', { count: guests.length })}{hasNextPage ? '+' : ''}</span>
       </div>
 
       <div className="max-w-sm">
         <Input
-          placeholder="Search by name or phone..."
+          placeholder={t('guest.searchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-      {loading ? (
+      {error ? (
+        <ErrorState message={error.message} onRetry={() => refetch()} />
+      ) : loading ? (
         <div className="flex items-center justify-center h-48">
           <Spinner size="lg" />
         </div>
@@ -85,20 +74,27 @@ export default function GuestsPage() {
                   </div>
                   <div className="text-right">
                     {guest.is_banned ? (
-                      <Badge variant="red">Banned</Badge>
+                      <Badge variant="red">{t('guest.banned')}</Badge>
                     ) : (
                       <span className="text-xs text-gray-400">
                         {guest.city ? `${guest.city}, ${guest.state}` : ''}
                       </span>
                     )}
                     <p className="text-xs text-gray-300 mt-1">
-                      Since {formatDate(guest.created_at)}
+                      {t('guest.since', { date: formatDate(guest.created_at) })}
                     </p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
+          {hasNextPage && (
+            <div className="p-3 border-t border-black/5 text-center">
+              <Button variant="ghost" size="sm" onClick={() => fetchNextPage()} loading={isFetchingNextPage}>
+                {t('actions.loadMore')}
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

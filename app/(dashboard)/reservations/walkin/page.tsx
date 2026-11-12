@@ -18,7 +18,9 @@ import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
 import { useToast } from '@/components/ui/Toast'
 import { useAppStore } from '@/store/useAppStore'
-import { nightsBetween, todayISO, formatDate } from '@/lib/utils/dates'
+import { nightsBetween, todayISO, addDaysISO, formatDate } from '@/lib/utils/dates'
+import { useQueryClient } from '@tanstack/react-query'
+import { errorMessage } from '@/lib/utils/errors'
 import { formatCurrency } from '@/lib/utils/currency'
 import type { Room, Guest } from '@/types'
 
@@ -26,28 +28,16 @@ type Step = 1 | 2 | 3
 
 // Step 3 only needs adults / children / special_requests from RHF
 type Step3Fields = { adults: number; children: number; special_requests?: string }
-const step3Schema = import('zod').then(({ z }) =>
-  z.object({
-    adults: z.number().int().min(1).max(10),
-    children: z.number().int().min(0).max(10),
-    special_requests: z.string().optional(),
-  })
-)
-void step3Schema // suppress unused warning
-
-function tomorrowISO(): string {
-  const d = new Date()
-  d.setDate(d.getDate() + 1)
-  return d.toISOString().split('T')[0]
-}
 
 export default function WalkInPage() {
   const { t } = useTranslation()
   const router = useRouter()
   const toast = useToast()
   const property = useAppStore((s) => s.property)
-  const today = todayISO()
-  const tomorrow = tomorrowISO()
+  const queryClient = useQueryClient()
+  // The front desk's "today" (property time zone), not the browser's or UTC.
+  const today = todayISO(property?.timezone)
+  const tomorrow = addDaysISO(today, 1)
 
   const [step, setStep] = useState<Step>(1)
   const [checkOutDate, setCheckOutDate] = useState('')
@@ -60,7 +50,7 @@ export default function WalkInPage() {
   const [loading, setLoading] = useState(false)
 
   // RHF only for step 3 inputs (adults / children / special_requests)
-  const { register, watch } = useForm<Step3Fields>({
+  const { register, getValues } = useForm<Step3Fields>({
     defaultValues: { adults: 1, children: 0 },
   })
 
@@ -83,7 +73,7 @@ export default function WalkInPage() {
             setSelectedRoom(null)
           }
         })
-        .catch((e) => toast.error(e.message))
+        .catch((e) => toast.error(errorMessage(e)))
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkOutDate, today])
@@ -91,14 +81,14 @@ export default function WalkInPage() {
   useEffect(() => {
     if (step === 2) {
       getGuests(guestSearch)
-        .then(setGuests)
-        .catch((e) => toast.error(e.message))
+        .then((page) => setGuests(page.rows))
+        .catch((e) => toast.error(errorMessage(e)))
     }
   }, [step, guestSearch, toast])
 
   const handleGuestSelect = (guest: Guest) => {
     if (guest.is_banned) {
-      toast.error(`⚠️ ${guest.first_name} ${guest.last_name} is banned: ${guest.ban_reason ?? 'No reason given'}`)
+      toast.error(`⚠️ ${t('guest.bannedWarning', { name: `${guest.first_name} ${guest.last_name}`, reason: guest.ban_reason ?? t('guest.noReason') })}`)
       return
     }
     setSelectedGuest(guest)
@@ -113,7 +103,7 @@ export default function WalkInPage() {
       setSelectedGuest(guest)
       setStep(3)
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
     } finally {
       setLoading(false)
     }
@@ -131,16 +121,17 @@ export default function WalkInPage() {
         check_in_date: today,
         check_out_date: checkOutDate,
         rate_per_night: selectedRoom.base_rate,
-        adults: watch('adults') ?? 1,
-        children: watch('children') ?? 0,
+        adults: getValues('adults') ?? 1,
+        children: getValues('children') ?? 0,
         source: 'walk_in',
-        special_requests: watch('special_requests') || undefined,
+        special_requests: getValues('special_requests') || undefined,
       })
-      toast.success(`${selectedGuest.first_name} checked in to Room ${selectedRoom.number}`)
+      await queryClient.invalidateQueries()
+      toast.success(t('reservation.checkedInTo', { name: selectedGuest.first_name, room: selectedRoom.number }))
       router.push(`/reservations/${reservation.id}`)
       router.refresh()
     } catch (e: unknown) {
-      toast.error((e as Error).message)
+      toast.error(errorMessage(e))
       setLoading(false)
     }
   }
@@ -151,19 +142,19 @@ export default function WalkInPage() {
         <Link href="/reservations">
           <Button variant="ghost" size="sm">
             <ArrowLeft className="h-4 w-4" />
-            Back
+            {t('actions.back')}
           </Button>
         </Link>
         <div className="flex items-center gap-2.5">
           <Image src="/duotone/checkin.svg" alt="" width={28} height={28} />
-          <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">Walk-in Check-in</h1>
+          <h1 className="font-display text-[28px] md:text-[34px] leading-tight font-bold tracking-tight text-secondary">{t('walkIn.title')}</h1>
         </div>
       </div>
 
       {/* Today banner */}
       <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-accent/10 text-sm text-accent font-medium">
         <Image src="/duotone/checkin.svg" alt="" width={18} height={18} />
-        Checking in today · {formatDate(today)}
+        {t('walkIn.checkingInToday', { date: formatDate(today) })}
       </div>
 
       {/* Step indicator */}
@@ -176,18 +167,18 @@ export default function WalkInPage() {
         ))}
       </div>
       <div className="flex text-xs text-gray-500 justify-between px-1">
-        <span>Room</span>
-        <span>Guest</span>
-        <span>Check In</span>
+        <span>{t('reservation.room')}</span>
+        <span>{t('reservation.guest')}</span>
+        <span>{t('reservation.checkIn')}</span>
       </div>
 
       {/* Step 1: Room & checkout date */}
       {step === 1 && (
         <Card>
-          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Select Room & Departure Date</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('walkIn.selectRoom')}</h2>
           <div className="mb-6">
             <Input
-              label="Check-out Date"
+              label={t('walkIn.checkOutDate')}
               type="date"
               min={tomorrow}
               value={checkOutDate}
@@ -220,7 +211,7 @@ export default function WalkInPage() {
                   </button>
                 ))}
                 {availableRooms.length === 0 && (
-                  <p className="col-span-3 text-center text-gray-400 py-4">No rooms available</p>
+                  <p className="col-span-3 text-center text-gray-400 py-4">{t('walkIn.noRooms')}</p>
                 )}
               </div>
             </>
@@ -242,7 +233,7 @@ export default function WalkInPage() {
       {step === 2 && (
         <Card>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">Select or Add Guest</h2>
+            <h2 className="text-[17px] font-semibold tracking-tight text-secondary">{t('reservation.selectGuest')}</h2>
             <Button
               size="sm"
               variant={newGuestMode ? 'outline' : 'ghost'}
@@ -269,13 +260,13 @@ export default function WalkInPage() {
               <Input label={t('guest.phone')} type="tel" {...registerGuest('phone')} />
               <Input label={t('guest.email')} type="email" error={guestErrors.email?.message} {...registerGuest('email')} />
               <Button type="submit" loading={loading} className="w-full">
-                Add Guest & Continue
+                {t('actions.addGuestContinue')}
               </Button>
             </form>
           ) : (
             <>
               <Input
-                placeholder="Search by name or phone..."
+                placeholder={t('guest.searchPlaceholder')}
                 value={guestSearch}
                 onChange={(e) => setGuestSearch(e.target.value)}
                 className="mb-3"
@@ -298,7 +289,7 @@ export default function WalkInPage() {
                       {guest.is_banned && (
                         <div className="flex items-center gap-1 text-error text-xs">
                           <AlertTriangle className="h-3 w-3" />
-                          Banned
+                          {t('guest.bannedBadge')}
                         </div>
                       )}
                     </div>
@@ -322,30 +313,30 @@ export default function WalkInPage() {
       {/* Step 3: Confirm & Check In — no <form>, payload built directly from state */}
       {step === 3 && selectedGuest && selectedRoom && (
         <Card>
-          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">Confirm & Check In</h2>
+          <h2 className="text-[17px] font-semibold tracking-tight text-secondary mb-4">{t('walkIn.confirmTitle')}</h2>
           <div className="space-y-3 mb-6">
-            <Row label="Guest" value={`${selectedGuest.first_name} ${selectedGuest.last_name}`} />
-            <Row label="Room" value={`Room ${selectedRoom.number} (${selectedRoom.room_type})`} />
-            <Row label="Check In" value={formatDate(today)} />
-            <Row label="Check Out" value={formatDate(checkOutDate)} />
-            <Row label="Nights" value={String(nights)} />
-            <Row label="Rate / Night" value={formatCurrency(selectedRoom.base_rate)} />
+            <Row label={t('reservation.guest')} value={`${selectedGuest.first_name} ${selectedGuest.last_name}`} />
+            <Row label={t('reservation.room')} value={`${t('reservation.room')} ${selectedRoom.number} (${t(`room.type_options.${selectedRoom.room_type}`)})`} />
+            <Row label={t('reservation.checkIn')} value={formatDate(today)} />
+            <Row label={t('reservation.checkOut')} value={formatDate(checkOutDate)} />
+            <Row label={t('reservation.nights')} value={String(nights)} />
+            <Row label={t('reservation.rate')} value={formatCurrency(selectedRoom.base_rate)} />
             <div className="flex justify-between text-sm font-semibold border-t border-black/5 pt-3">
-              <span className="text-secondary">Total</span>
+              <span className="text-secondary">{t('reservation.total')}</span>
               <span className="text-primary text-lg">{formatCurrency(nights * selectedRoom.base_rate)}</span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <Input
-              label="Adults"
+              label={t('reservation.adults')}
               type="number"
               min={1}
               max={10}
               {...register('adults', { valueAsNumber: true })}
             />
             <Input
-              label="Children"
+              label={t('reservation.children')}
               type="number"
               min={0}
               max={10}
@@ -365,7 +356,7 @@ export default function WalkInPage() {
               className="flex-1"
             >
               <Image src="/filled/checkin.svg" alt="" width={18} height={18} />
-              Check In Now
+              {t('actions.checkInNow')}
             </Button>
             <Button type="button" variant="outline" onClick={() => setStep(2)}>
               {t('actions.back')}
